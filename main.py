@@ -625,8 +625,10 @@ def command_default(m):
 ########################################################################
 
 if __name__ == "__main__":    
-    
-    bot.polling()
+    try:
+        bot.polling()
+    except:
+        pass
     
 #    while True:
 #        pass

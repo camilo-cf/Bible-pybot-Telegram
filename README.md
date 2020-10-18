@@ -6,7 +6,7 @@ This is a project developed for educational/ personal purposes. Use this bot und
 
 subscribe here [t.me/Bible_pybot](t.me/Bible_pybot) in Telegram.
 
-### Screen record usage
+### Screen record
 <p align="center">
 <img src="SupportFiles/Screeenrecord.gif" width="200"/>
 </p>

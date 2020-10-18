@@ -46,6 +46,6 @@ Don't forget to add your telegram TOKEN to your config.txt file.
 
 You can deploy it as you want Heroku, pythoneverywhere, your server etc.
 
-In my case, I deployed it on a raspberry pi zero. I used crontab to schedule the tasks (run the main.py on boot to keep the service alive and the daily chapter to be sent daily at 0:00 GTM).
+In my case, I deployed it on a raspberry pi zero. I used crontab to schedule the tasks (run the main.py on boot to keep the service alive and the daily chapter to be sent daily at 0:00 GTM+1).
 
 Feel free to contact me if you have any doubt.

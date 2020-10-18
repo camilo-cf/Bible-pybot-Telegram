@@ -7,7 +7,7 @@ This is a project developed for educational/ personal purposes. Use this bot und
 subscribe here [t.me/Bible_pybot](t.me/Bible_pybot) in Telegram.
 
 ### Screnshots
-TODO! + GIF
+![Screen](SupportFiles/Screeenrecord.gif)
 
 ## Features
 

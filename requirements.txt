@@ -1,0 +1,5 @@
+googletrans==3.0.0
+numpy 
+sqlite3
+TeleBot????
+pip install schedule

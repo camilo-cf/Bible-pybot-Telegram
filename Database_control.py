@@ -50,15 +50,15 @@ def add_user(connection, cursor, id, name):
         print("Error in the query - the user already exists")
 
 
-def get_suscribed_user(cursor):
+def get_subscribed_user(cursor):
     '''
-    Get the id list of the suscribed users
+    Get the id list of the subscribed users
 
     Args:
         cursor: Database cursor
     
     Return:
-        List of suscribed users IDs
+        List of subscribed users IDs
     '''
     
     cursor.execute("SELECT id FROM users WHERE status = ?;", (1,))
@@ -115,7 +115,7 @@ def get_mod_language(cursor, id):# get the mod_language for the id
     return cursor.fetchall()[0][0]
 
 
-def set_status(connection, cursor, status, id):#save the suscription status in the db
+def set_status(connection, cursor, status, id):#save the subscription status in the db
     try:
         cursor.execute("UPDATE users SET status = ? where id = ?;", (status, id))
         connection.commit()
@@ -123,7 +123,7 @@ def set_status(connection, cursor, status, id):#save the suscription status in t
         print("Error - verify the entry")
 
 
-def get_status(cursor, id):# get the registry/suscription status for the id
+def get_status(cursor, id):# get the registry/subscription status for the id
     try:
         cursor.execute("SELECT status FROM users WHERE id = ?;", (id,))
         return cursor.fetchall()[0][0]

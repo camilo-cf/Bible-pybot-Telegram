@@ -19,7 +19,7 @@ SOFTWARE.
 """
 
 '''
-Send the daily chapter to the group of registered/ suscribed users
+Send the daily chapter to the group of registered/ subscribed users
 This will be used as a daily crontab task
 '''
 
@@ -27,7 +27,7 @@ import Database_control
 import main
 
 connection, cursor = Database_control.create_db()
-response = Database_control.get_suscribed_user(cursor)
+response = Database_control.get_subscribed_user(cursor)
 Database_control.close_db(connection)
 
 for each_id in response:

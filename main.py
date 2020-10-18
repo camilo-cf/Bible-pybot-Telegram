@@ -46,10 +46,10 @@ commands = {
     'start'             : '☝ Know what can I do',
     'send_chapter'      : '📧 Send now the chapter to read',
     'verse'             : '⛪ Request a Bible passage',
-    'information'       : '📒 Know your your information and settings for this bot',
+    'information'       : '📒 Know your information and settings for this bot',
     'help'              : '❔ Gives you information about the available commands',
-    'suscribe'          : '📚 Receive 1 Bible chapter everyday at a given time or Cancel it',
-    'language'          : '🌎 Select your prefered language',#TODO translate all the messages? + trasnlations
+    'subscribe'          : '📚 Receive 1 Bible chapter every day at a given time or Cancel it',
+    'language'          : '🌎 Select your preferred language',
     'choose_book'       : '📖 Select the current bible book you are reading',
     'choose_chapter'    : '📑 Select the current chapter you want to start reading',
     'bible_version'     : '📕 Select the bible version'
@@ -161,7 +161,7 @@ def command_start(m):
     language = Database_control.get_language(cursor, id)
     Database_control.close_db(connection)
 
-    start_text="☝ This bot is a free service for educational purposes \nThis bot 🤖 can: \n\t1. Send you daily 1 chapter of the Bible in a sequence ('/suscribe') \n\t2. If you are not suscribed or want to advance more, you can request the chapter manually ('/send_chapter'). \n\t3.❓ Also you can ask for any verse or passage ('/verse') \n\nGo to help ('/help') for more information"
+    start_text="☝ This bot is a free service for educational purposes \nThis bot 🤖 can: \n\t1. Send you daily 1 chapter of the Bible in a sequence ('/subscribe') \n\t2. If you are not subscribed or want to advance more, you can manually request the chapter ('/send_chapter'). \n\t3.❓ Also you can ask for any verse or passage ('/verse') \n\nGo to help ('/help') for more information"
     send_translated_message(m.chat.id, start_text, language)  # Send start text
     show_mainkeyboard(m)
 
@@ -211,7 +211,7 @@ def command_send_chapter(m):
         Database_control.close_db(connection)
         show_mainkeyboard(m)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
         command_start(m)
 
@@ -273,7 +273,7 @@ def command_verse(m):
         Example = "Examples: \nJohn 14:6 \nGenesis 2:1-4 \nLuke 3"
         send_translated_message(id, Example, language)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         command_start(m)
 
         
@@ -304,11 +304,11 @@ def command_information(m):
         else:
             status='❌'
 
-        info_text = "📒 Information \n📚 Suscribed: \t"+status+"\n🌎 Language: \t"+str(language)+"\n📖 Current Bible Book: \t"+str(book)+"\n📑 Current Chapter: \t"+str(chapter)+"\n📕 Current Bible Version: \t"+str(bible_version)
+        info_text = "📒 Information \n📚 Subscribed: \t"+status+"\n🌎 Language: \t"+str(language)+"\n📖 Current Bible Book: \t"+str(book)+"\n📑 Current Chapter: \t"+str(chapter)+"\n📕 Current Bible Version: \t"+str(bible_version)
         send_translated_message(m.chat.id, info_text, language)  # Send info text
         show_mainkeyboard(m)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")        
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")        
         command_start(m)
 
 
@@ -329,7 +329,7 @@ def command_help(m):
         send_translated_message(id, help_text, language)  # send the generated help page
         show_mainkeyboard(m)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         command_start(m)
 
 
@@ -351,9 +351,9 @@ def command_hide(message):
     bot.send_message(message.chat.id, "⌨💤...", reply_markup=hide_markup)
 
 
-# suscribe/ unsuscribe
-@bot.message_handler(commands=['suscribe'])
-def command_suscribe(m):
+# subscribe/ unsubscribe
+@bot.message_handler(commands=['subscribe'])
+def command_subscribe(m):
     id = m.chat.id
     
     connection, cursor = Database_control.create_db()
@@ -375,10 +375,10 @@ def command_suscribe(m):
         else:
             status='❌' 
 
-        text = "Suscription: \t"+status 
+        text = "Subscription: \t"+status 
         send_translated_message(id, text, language)  # send the generated text
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
         command_start(m)
 
@@ -399,7 +399,7 @@ def command_language(m):
     if verify_id:
         send_translated_message(id, "Type your new language", language)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         command_start(m)
 
     
@@ -418,7 +418,7 @@ def command_book(m):
     if verify_id:
         send_translated_message(id, "Type the desired bible book", language)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         command_start(m)
 
 
@@ -437,7 +437,7 @@ def command_chapter(m):
     if verify_id:
         send_translated_message(id, "Type the number of the desired chapter to start with", language)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         command_start(m)
     
 
@@ -469,7 +469,7 @@ def command_bible_version(m):
             
         bot.send_message(m.from_user.id, "⌨️", reply_markup=version_markup)
     else:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
         command_start(m)
     
@@ -482,7 +482,7 @@ def command_default(m):
     connection, cursor = Database_control.create_db()
 
     if Database_control.verify_id(cursor, id) == False:
-        send_translated_message(m.chat.id, "You are a new user, check what I can do at /start")
+        send_translated_message(m.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
         command_start(m)
     else:

@@ -4,7 +4,7 @@ Here I present the code of a Bible bot that can be found on telegram on [t.me/Bi
 
 This is a project developed for educational/ personal purposes. Use this bot under your responsibility, no warranties.
 
-Suscribe here [t.me/Bible_pybot](t.me/Bible_pybot) in Telegram.
+subscribe here [t.me/Bible_pybot](t.me/Bible_pybot) in Telegram.
 
 ### Screnshots
 TODO! + GIF

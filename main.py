@@ -628,5 +628,5 @@ if __name__ == "__main__":
     
     bot.polling()
     
-    while True:
-        pass
+#    while True:
+#        pass

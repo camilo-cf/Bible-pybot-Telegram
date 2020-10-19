@@ -195,7 +195,8 @@ def command_send_chapter(m):
                 response = Bible.translate_message(response, origin_language)
         except:
             response = "Error - please retry"
-
+        
+        send_translated_message(id, n_message, language)
         response = [i for i in telebot.util.split_string(response, 3000)]
         for each_message in response:
             send_translated_message(id,each_message, language)
@@ -240,7 +241,9 @@ def command_send_chapter_crontab(id):
         response = "Error - please retry"
 
     response = [i for i in telebot.util.split_string(response, 3000)]
-
+    
+    send_translated_message(id, n_message, language)
+    
     for each_message in response:
         send_translated_message(id,each_message, language)
 
@@ -626,9 +629,7 @@ def command_default(m):
 
 if __name__ == "__main__":    
     try:
-        bot.polling()
+        while True:
+            bot.polling()
     except:
-        pass
-    
-#    while True:
-#        pass
+        bot.polling()

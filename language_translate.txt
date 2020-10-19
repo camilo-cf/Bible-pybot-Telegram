@@ -9,12 +9,11 @@ Belarusian
 Bengali
 Bosnian
 Bulgarian
-Burmese
 Catalan
 Cebuano
-Chewa
-Chinese (Simplified)
-Chinese (Traditional)
+Chichewa
+Chinese (simplified)
+Chinese (traditional)
 Corsican
 Croatian
 Czech
@@ -26,14 +25,16 @@ Estonian
 Filipino
 Finnish
 French
+Frisian
 Galician
 Georgian
 German
 Greek
 Gujarati
-Haitian Creole
+Haitian creole
 Hausa
 Hawaiian
+Hebrew
 Hebrew
 Hindi
 Hmong
@@ -48,9 +49,8 @@ Javanese
 Kannada
 Kazakh
 Khmer
-Kinyarwanda
 Korean
-Kurdish (Kurmanji)
+Kurdish (kurmanji)
 Kyrgyz
 Lao
 Latin
@@ -65,44 +65,42 @@ Maltese
 Maori
 Marathi
 Mongolian
+Myanmar (burmese)
 Nepali
-Norwegian (Bokmål)
+Norwegian
 Odia
 Pashto
 Persian
 Polish
 Portuguese
-Punjabi (Gurmukhi)
+Punjabi
 Romanian
 Russian
 Samoan
-Scots Gaelic
+Scots gaelic
 Serbian
+Sesotho
 Shona
 Sindhi
 Sinhala
 Slovak
 Slovenian
 Somali
-Sotho
 Spanish
 Sundanese
 Swahili
 Swedish
 Tajik
 Tamil
-Tatar
 Telugu
 Thai
 Turkish
-Turkmen
 Ukrainian
 Urdu
 Uyghur
 Uzbek
 Vietnamese
 Welsh
-West Frisian
 Xhosa
 Yiddish
 Yoruba

@@ -157,7 +157,9 @@ def command_start(m):
     name = m.chat.first_name
 
     connection, cursor = Database_control.create_db()
-    Database_control.add_user(connection, cursor, id, name)
+    verify_id = Database_control.verify_id(cursor, id)    
+    if verify_id == False:
+        Database_control.add_user(connection, cursor, id, name)
     language = Database_control.get_language(cursor, id)
     Database_control.close_db(connection)
 
@@ -457,7 +459,7 @@ def command_bible_version(m):
 
     if verify_id:
         if language in dict_api_version.keys():
-            versions = dict_api_version[language]
+            versions = dict_api_version[language] + dict_api_version["English"]
         else:
             versions = dict_api_version["English"]
 
@@ -584,7 +586,7 @@ def command_default(m):
             book = Database_control.get_book(cursor, id)
 
             if message.isnumeric():
-                if Bible.verify_book_chapter(book, message) == True:
+                if (Bible.verify_book_chapter(book, message) == True) and (int(message) >= 1):
                     Database_control.set_chapter(connection, cursor, message, id)
                     send_translated_message(m.chat.id, "The selected chapter is "+ message, origin_language)  
                 else:

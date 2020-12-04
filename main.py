@@ -637,14 +637,11 @@ def command_default(m):
 #telebot.apihelper.READ_TIMEOUT = 1
 if __name__ == "__main__":       
     # bot.polling(none_stop=True, timeout=30)
-
-    try: 
-        log.info('Starting bot')
-        bot.polling(none_stop=True, timeout=30)
-    except Exception as err:
-        log.error("Bot polling error: {0}".format(err.args))
-        bot.stop_polling()
-        time.sleep(30)
-
     while True:
-        time.sleep(20)
+        try: 
+            log.info('Starting bot')
+            bot.polling(none_stop=True, timeout=30)
+        except Exception as err:
+            log.error("Bot polling error: {0}".format(err.args))
+            bot.stop_polling()
+            time.sleep(60)

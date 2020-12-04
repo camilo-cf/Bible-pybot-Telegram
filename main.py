@@ -27,6 +27,8 @@ from difflib import SequenceMatcher
 import numpy as np
 from googletrans import Translator
 import configparser
+import time
+import logging as log
 
 
 ########################################################################
@@ -35,7 +37,7 @@ import configparser
 
 # Telegram TOKEN
 config = configparser.RawConfigParser()
-config.read('IGNORE/config.txt')
+config.read('config.txt')
 TOKEN = dict(config.items('DEFAULT'))['bot_token']
 
 #create a new Telegram Bot object
@@ -633,5 +635,16 @@ def command_default(m):
 ################            MAIN FUNCTION             ##################
 ########################################################################
 #telebot.apihelper.READ_TIMEOUT = 1
-if __name__ == "__main__":    
-    bot.polling(none_stop=True, timeout=30)
+if __name__ == "__main__":       
+    # bot.polling(none_stop=True, timeout=30)
+
+    try: 
+        log.info('Starting bot')
+        bot.polling(none_stop=True, timeout=30)
+    except Exception as err:
+        log.error("Bot polling error: {0}".format(err.args))
+        bot.stop_polling()
+        time.sleep(30)
+
+    while True:
+        time.sleep(20)

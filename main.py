@@ -35,7 +35,7 @@ import configparser
 
 # Telegram TOKEN
 config = configparser.RawConfigParser()
-config.read('config.txt')
+config.read('IGNORE/config.txt')
 TOKEN = dict(config.items('DEFAULT'))['bot_token']
 
 #create a new Telegram Bot object
@@ -137,12 +137,16 @@ def verify_version(version_input, versions=list(dict_api_ver2acr.keys())):
 def send_translated_message(id, text, language="English"):
     '''
     '''
-    if language == "English":
-        bot.send_message(id, text)
-    else:
-        text = Bible.translate_message(text, language=language, src="English")
-        text = text.replace("/ ","/")
-        bot.send_message(id, text)
+    try:
+        if language == "English":
+            bot.send_message(id, text)
+        else:
+            text = Bible.translate_message(text, language=language, src="English")
+            text = text.replace("/ ","/")
+            bot.send_message(id, text)
+    except:
+        print("Connection Error")
+        send_translated_message(id, text, language)
 
 
 
@@ -628,10 +632,6 @@ def command_default(m):
 ########################################################################
 ################            MAIN FUNCTION             ##################
 ########################################################################
-
+#telebot.apihelper.READ_TIMEOUT = 1
 if __name__ == "__main__":    
-    try:
-        while True:
-            bot.polling()
-    except:
-        bot.polling()
+    bot.polling(none_stop=True, timeout=30)

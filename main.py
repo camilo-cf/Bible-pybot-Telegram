@@ -117,7 +117,6 @@ def verify_language(language_input, lang_ver_transl=list(lang_ver_transl), lang_
 
     '''
     similarity_vec=[]
-
     languages = lang_transl + lang_ver_transl
     language_input = translator.translate(language_input, dest='english').text
     for each in languages:

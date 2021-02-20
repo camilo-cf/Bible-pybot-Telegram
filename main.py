@@ -147,9 +147,9 @@ def send_translated_message(id, text, language="English"):
             bot.send_message(id, text)
     except:
         print("Connection Error")
-        send_translated_message(id, text, language)
-
-
+        # DO NOT try to send the daily verse or any service if the user blocked the bot
+        #send_translated_message(id, text, language)
+        
 
 ########################################################################
 ################         ACTION FUNCTIONS           ###################

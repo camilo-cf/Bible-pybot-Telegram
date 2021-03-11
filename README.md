@@ -1,6 +1,6 @@
 # Bible-pybot-Telegram
 
-Here I present the code of a Bible bot that can be found on telegram on [t.me/Bible_pybot](t.me/Bible_pybot). I will try to keep this bot working (on a raspberry pi) for my personal use (push me to read 1 chapter of the Bible daily); feel free to use it and report issues.
+Here I present the code of a Bible bot that can be found on telegram on [https://t.me/Bible_pybot](https://t.me/Bible_pybot). I will try to keep this bot working (on a raspberry pi) for my personal use (push me to read 1 chapter of the Bible daily); feel free to use it and report issues.
 
 This is a project developed for educational/ personal purposes. Use this bot under your responsibility, no warranties.
 

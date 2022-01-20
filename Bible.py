@@ -50,23 +50,23 @@ def similar(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
 
-def verify_book(book, Books=Books):
+def verify_book(book, books=Books):
     '''
     Verify and Identify the book (input) according to the Books list, returns the most similar book name
 
     Args:
         book (str): Input of the user you want to verify
-        Books (list): List of known books (given by default in constants)
+        books (list): List of known books (given by default in constants)
     
     Return:
         The most similar book to the input in the list (str)
     '''
     similarity_vec=[]
 
-    for each in Books:
+    for each in books:
         similarity_vec.append(similar(book,each))
 
-    return Books[np.argmax(similarity_vec)]
+    return books[np.argmax(similarity_vec)]
 
 
 def verify_book_chapter(book, chapter, bible_version = 'akjv'):
@@ -85,7 +85,6 @@ def verify_book_chapter(book, chapter, bible_version = 'akjv'):
     try:
         requesting = requests.get('json_api_url'+str(book)+str(chapter)+'json_api_url_2part'+bible_version)
         text = requesting.text[1:-2]
-        # jsontxt = json.loads(text) # Only to check if is something there
         json.loads(text) # Only to check if is something there
         return True
     except:
@@ -146,7 +145,6 @@ def get_message(message, bible_version = 'akjv'):
 
 
     final_message = "".join(full_verses)
-    #final_message = "".join([message+'\r\n', final_message])
     return(final_message)
     
 

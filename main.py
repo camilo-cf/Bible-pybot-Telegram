@@ -306,6 +306,8 @@ def command_information(m):
         # Full version name (no acronym)
         try:
             bible_version = dict_api_acr2ver[bible_version]
+        except:
+            bible_version = "akjv"
 
         if status==1:
             status='✅'

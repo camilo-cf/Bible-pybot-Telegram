@@ -1,3 +1,4 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
 # Bible-pybot-Telegram
 
 Here I present the code of a Bible bot that can be found on telegram on [https://t.me/Bible_pybot](https://t.me/Bible_pybot). I will try to keep this bot working (on a raspberry pi) for my personal use (push me to read 1 chapter of the Bible daily); feel free to use it and report issues.

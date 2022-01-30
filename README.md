@@ -1,4 +1,5 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
+[![CodeFactor](https://www.codefactor.io/repository/github/camilo-cf/bible-pybot-telegram/badge)](https://www.codefactor.io/repository/github/camilo-cf/bible-pybot-telegram)
 [![Known Vulnerabilities](https://snyk.io/test/github/camilo-cf/Bible-pybot-Telegram/badge.svg)](https://snyk.io/test/github/camilo-cf/Bible-pybot-Telegram)
 
 # Bible-pybot-Telegram

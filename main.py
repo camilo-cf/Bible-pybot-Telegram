@@ -21,6 +21,7 @@ SOFTWARE.
 import Bible
 import Database_control
 
+import logging
 import telebot
 from telebot import types
 from difflib import SequenceMatcher
@@ -29,6 +30,7 @@ from googletrans import Translator
 import configparser
 import time
 import logging as log
+import os
 
 
 ########################################################################
@@ -145,7 +147,8 @@ def send_translated_message(id, text, language="English"):
             text = Bible.translate_message(text, language=language, src="English")
             text = text.replace("/ ","/")
             bot.send_message(id, text)
-    except:
+    except (Exception) as exception:
+        logging.critical("In send translated message - Exception: ", exception)
         print("Connection Error")
         # DO NOT try to send the daily verse or any service if the user blocked the bot
         #send_translated_message(id, text, language)
@@ -200,8 +203,9 @@ def command_send_chapter(m):
                 n_message = Bible.translate_message(message, language="English", src=origin_language)
                 response = Bible.get_message(n_message, bible_version)
                 response = Bible.translate_message(response, origin_language)
-        except:
+        except (Exception) as exception:
             response = "Error - please retry"
+            logging.critical("In send chapter page - Exception: ", exception)
         
         send_translated_message(id, n_message, language)
         response = [i for i in telebot.util.split_string(response, 3000)]
@@ -244,8 +248,10 @@ def command_send_chapter_crontab(id):
             n_message = Bible.translate_message(message, language="English", src=origin_language)
             response = Bible.get_message(n_message, bible_version)
             response = Bible.translate_message(response, origin_language)
-    except:
-        response = "Error - please retry"
+
+    except (Exception) as exception:
+            response = "Error - please retry"
+            logging.critical("In send command_send_chapter_crontab - Exception: ", exception)
 
     response = [i for i in telebot.util.split_string(response, 3000)]
     
@@ -549,8 +555,8 @@ def command_default(m):
 
                 Database_control.set_verse(connection, cursor, id)
 
-            except:
-                response = "Error - please retry"
+            except (Exception) as exception:
+                logging.critical("In message handler - Exception: ", exception)
 
             response = [i for i in telebot.util.split_string(response, 3000)]
             for each_message in response:
@@ -644,3 +650,5 @@ if __name__ == "__main__":
             log.error("Bot polling error: {0}".format(err.args))
             bot.stop_polling()
             time.sleep(60)
+
+            

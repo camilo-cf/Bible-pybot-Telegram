@@ -19,4 +19,6 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: biblepybottelegram
-        args: --file=Dockerfile
+        args: 
+          --file=Dockerfile
+          --severity-threshold=high

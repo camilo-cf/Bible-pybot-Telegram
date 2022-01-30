@@ -83,7 +83,7 @@ def verify_book_chapter(book, chapter, bible_version = 'akjv'):
     '''
 
     try:
-        requesting = requests.get('json_api_url'+str(book)+str(chapter)+'json_api_url_2part'+bible_version)
+        requesting = requests.get(json_api_url+str(book)+str(chapter)+json_api_url_2part+bible_version)
         text = requesting.text[1:-2]
         json.loads(text) # Only to check if is something there
         return True
@@ -103,7 +103,7 @@ def get_chapter(book, chapter, bible_version = 'akjv'):
     Return:
         The message of the bible in the given book and chapter (str) [it can be long]
     '''
-    requesting = requests.get('json_api_url'+str(book)+str(chapter)+'json_api_url_2part'+bible_version)
+    requesting = requests.get(json_api_url+str(book)+str(chapter)+json_api_url_2part+bible_version)
     return requesting.text[1:-2]
 
 def get_message(message, bible_version = 'akjv'):
@@ -122,7 +122,7 @@ def get_message(message, bible_version = 'akjv'):
     message = " ".join([book,details])
 
     if message[-1].isnumeric():
-        requesting = requests.get('json_api_url'+str(message)+'json_api_url_2part'+bible_version)
+        requesting = requests.get(json_api_url+str(message)+json_api_url_2part+bible_version)
         text = requesting.text[1:-2]
         jsontxt = json.loads(text)
 
@@ -185,7 +185,7 @@ def get_next_chapter(present_chapter, bible_version = 'akjv'):
     try:
         new_chapter=int(chapter)+1
         next_chapter = " ".join([book,str(new_chapter)])
-        requesting = requests.get('json_api_url'+str(next_chapter)+'json_api_url_2part'+bible_version)
+        requesting = requests.get(json_api_url+str(next_chapter)+json_api_url_2part+bible_version)
         text = requesting.text[1:-2]
 
         if text == 'U':

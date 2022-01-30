@@ -24,10 +24,8 @@ import Database_control
 import logging
 import telebot
 from telebot import types
-from difflib import SequenceMatcher
 import numpy as np
 from googletrans import Translator
-import configparser
 import time
 import logging as log
 import os
@@ -38,9 +36,7 @@ import os
 ########################################################################
 
 # Telegram TOKEN
-config = configparser.RawConfigParser()
-config.read('config.txt')
-TOKEN = dict(config.items('DEFAULT'))['bot_token']
+TOKEN = os.getenv("BOT_TOKEN")
 
 #create a new Telegram Bot object
 bot = telebot.TeleBot(TOKEN)

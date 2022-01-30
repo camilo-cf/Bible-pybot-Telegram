@@ -1,4 +1,4 @@
-name: Workflow for Python using Snyk
+name: Python Snyk
 on: push
 jobs:
   security:

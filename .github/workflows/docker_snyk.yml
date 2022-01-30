@@ -1,4 +1,4 @@
-name: Workflow for Docker using Snyk 
+name: Docker Snyk 
 on: push
 jobs:
   snyk:

@@ -2,3 +2,5 @@ config.txt
 users.db
 __*
 .env
+.dccache
+*.tar

@@ -1,3 +1,5 @@
 config.txt
 users.db
 __*
+.env
+build_run.sh

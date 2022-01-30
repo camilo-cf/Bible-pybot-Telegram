@@ -68,6 +68,7 @@ f = open(os.path.join(os.getcwd(),"src","languages_api.txt"), "r")
 bible_api_list = []
 for x in f:
     bible_api_list.append(x[4:])
+f.close()
 
 dict_api_version={}
 languages_api=[]
@@ -96,10 +97,10 @@ unique_languages_api = set(languages_api)
 
 # Available translation languages
 f = open(os.path.join(os.getcwd(),"src","language_translate.txt"), "r")
-
 languages_translation = []
 for each in f:
     languages_translation.append(each.split("\n")[0])
+f.close()
 
 # Languages comparison
 languages_translation_set = set(languages_translation)
@@ -466,8 +467,8 @@ def command_bible_version(m):
     verify_id = Database_control.verify_id(cursor, id)
 
     if verify_id:
-        if language in dict_api_version.keys():
-            versions = dict_api_version[language] + dict_api_version["English"]
+        if language in dict_api_version:
+            versions = dict_api_version[language].join(dict_api_version["English"]) 
         else:
             versions = dict_api_version["English"]
 
@@ -515,7 +516,7 @@ def command_default(m):
             Database_control.set_language(connection, cursor, language, id)
             Database_control.set_mod_language(connection, cursor, id)
            
-            if language in dict_api_version.keys():
+            if language in dict_api_version:
                 Database_control.set_bible_version(connection, cursor, dict_api_ver2acr[dict_api_version[language][0]], id)
             else:
                 Database_control.set_bible_version(connection, cursor, 'akjv', id)

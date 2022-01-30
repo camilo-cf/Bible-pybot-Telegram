@@ -9,7 +9,7 @@ def create_db():
             Objects to interact and manipulate a dabatase 
     '''
 
-    connection = sqlite3.connect("users.db")
+    connection = sqlite3.connect("data/users.db")
     cursor = connection.cursor()
     sql_command = """
     CREATE TABLE IF NOT EXISTS users ( 

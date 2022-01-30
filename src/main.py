@@ -64,7 +64,7 @@ commands = {
 translator = Translator()
 
 # Available Languages and Versions in the API
-f = open("languages_api.txt", "r")
+f = open(os.path.join(os.getcwd(),"src","languages_api.txt"), "r")
 bible_api_list = []
 for x in f:
     bible_api_list.append(x[4:])
@@ -95,7 +95,8 @@ dict_api_acr2ver = dict(zip(acronyms_api, version_api))
 unique_languages_api = set(languages_api)
 
 # Available translation languages
-f = open("language_translate.txt", "r")
+f = open(os.path.join(os.getcwd(),"src","language_translate.txt"), "r")
+
 languages_translation = []
 for each in f:
     languages_translation.append(each.split("\n")[0])

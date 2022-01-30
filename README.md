@@ -9,7 +9,7 @@ subscribe here [https://t.me/Bible_pybot](https://t.me/Bible_pybot) in Telegram.
 
 ### Screen record
 <p align="center">
-<img src="SupportFiles/Screeenrecord.gif" width="200"/>
+<img src="doc/Screeenrecord.gif" width="200"/>
 </p>
 
 ## Features

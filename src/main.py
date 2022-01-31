@@ -468,7 +468,7 @@ def command_bible_version(m):
 
     if verify_id:
         if language in dict_api_version:
-            versions = dict_api_version[language].join(dict_api_version["English"]) 
+            versions = dict_api_version[language]+(dict_api_version["English"]) 
         else:
             versions = dict_api_version["English"]
 

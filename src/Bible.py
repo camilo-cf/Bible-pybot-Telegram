@@ -1,77 +1,77 @@
-import requests
+"""
+    Library of Bible functions
+"""
+from difflib import SequenceMatcher
 import json
 from googletrans import Translator
-from difflib import SequenceMatcher
 import numpy as np
+import requests
 
 ########################################################################
-######################         Constants          ###################### 
+######################         Constants          ######################
 ########################################################################
 
-Books=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua',
-           'Judges','Ruth','1Samuel','2Samuel','1Kings','2Kings','1Chronicles',
-           '2Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs',
-           'Ecclesiastes','SongofSolomon','Isaiah','Jeremiah','Lamentations',
-           'Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah',
-           'Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi',
-           'Matthew','Mark','Luke','John','Acts','Romans','1Corinthians',
-           '2Corinthians','Galatians','Ephesians','Philippians','Colossians',
-           '1Thessalonians','2Thessalonians','1Timothy','2Timothy','Titus',
-           'Philemon','Hebrews','James','1Peter','2Peter','1John','2John',
-           '3John','Jude','Revelation']
+Books = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua',
+         'Judges', 'Ruth', '1Samuel', '2Samuel', '1Kings', '2Kings', '1Chronicles',
+         '2Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
+         'Ecclesiastes', 'SongofSolomon', 'Isaiah', 'Jeremiah', 'Lamentations',
+         'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah',
+         'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi',
+         'Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1Corinthians',
+         '2Corinthians', 'Galatians', 'Ephesians', 'Philippians', 'Colossians',
+         '1Thessalonians', '2Thessalonians', '1Timothy', '2Timothy', 'Titus',
+         'Philemon', 'Hebrews', 'James', '1Peter', '2Peter', '1John', '2John',
+         '3John', 'Jude', 'Revelation']
 
-Dict_books = dict(zip(Books, range(1,len(Books)+1)))
+Dict_books = dict(zip(Books, range(1, len(Books)+1)))
 
-json_api_url = "https://getbible.net/json?passage="
-json_api_url_2part = "&version="
+JSON_API_URL = "https://getbible.net/json?passage="
+JSON_API_URL_2PART = "&version="
 
-#Constructor of the translator
+# Constructor of the translator
 translator = Translator()
 
 ########################################################################
 
 
-
 ########################################################################
-######################         Functions          ###################### 
+######################         Functions          ######################
 ########################################################################
 
-def similar(a, b):
+def similar(string_1, string_2):
     '''
     Compares to strings and verify their similarity ratio
 
     Args:
-        a (str): String to be compared
-        b (str): String to be compared
+        string_1 (str): String to be compared
+        string_2 (str): String to be compared
 
     Return:
         similarity ratio (float betweenn 0.0 - 1.0)
     '''
-    return SequenceMatcher(None, a, b).ratio()
+    return SequenceMatcher(None, string_1, string_2).ratio()
 
 
 def verify_book(book, books=Books):
     '''
-    Verify and Identify the book (input) according to the Books list, returns the most similar book name
+    Verify and Identify the book (input) according to the Books list,
+    returns the most similar book name.
 
     Args:
         book (str): Input of the user you want to verify
         books (list): List of known books (given by default in constants)
-    
+
     Return:
         The most similar book to the input in the list (str)
     '''
-    similarity_vec=[]
-
+    similarity_vec = []
     for each in books:
-        similarity_vec.append(similar(book,each))
-
+        similarity_vec.append(similar(book, each))
     return books[np.argmax(similarity_vec)]
 
-
-def verify_book_chapter(book, chapter, bible_version = 'akjv'):
+def verify_book_chapter(book, chapter, bible_version='akjv'):
     '''
-    Verify the if the given chapter of a given book exists
+    Verify the if the given chapter of a given book exists.
 
     Args:
         book (str): Given book of the Bible
@@ -83,15 +83,17 @@ def verify_book_chapter(book, chapter, bible_version = 'akjv'):
     '''
 
     try:
-        requesting = requests.get(json_api_url+str(book)+str(chapter)+json_api_url_2part+bible_version)
+        requesting = requests.get(
+            JSON_API_URL+str(book)+str(chapter)+JSON_API_URL_2PART+bible_version)
         text = requesting.text[1:-2]
-        json.loads(text) # Only to check if is something there
+        json.loads(text)  # Only to check if is something there
         return True
-    except:
+    except (Exception) as exception:
+        print(exception)
         return False
 
 
-def get_chapter(book, chapter, bible_version = 'akjv'):   
+def get_chapter(book, chapter, bible_version='akjv'):
     '''
     Gey the Bible chapter
 
@@ -103,52 +105,58 @@ def get_chapter(book, chapter, bible_version = 'akjv'):
     Return:
         The message of the bible in the given book and chapter (str) [it can be long]
     '''
-    requesting = requests.get(json_api_url+str(book)+str(chapter)+json_api_url_2part+bible_version)
+    requesting = requests.get(
+        JSON_API_URL+str(book)+str(chapter)+JSON_API_URL_2PART+bible_version)
     return requesting.text[1:-2]
 
-def get_message(message, bible_version = 'akjv'):
+
+def get_message(message, bible_version='akjv'):
     '''
-    Get the passage of the Bible given an income message 
+    Get the passage of the Bible given an income message.
 
     Args:
-        message (str): An input text that should be something like "John 14:6" or "Exodus 17:1-6" or "Genesis 1"
-        bible_version (str): Version of the Bible
+        message (str):  An input text that should be something like
+                        "John 14:6" or "Exodus 17:1-6" or "Genesis 1".
+        bible_version (str): Version of the Bible.
 
     Return:
-    The message of the bible in the given book and chapter (str) [it can be long]
+        The message of the bible in the given book and chapter (str) [it can be long].
     '''
     book = verify_book(message)
     details = message.split(" ")[-1]
-    message = " ".join([book,details])
+    message = " ".join([book, details])
 
     if message[-1].isnumeric():
-        requesting = requests.get(json_api_url+str(message)+json_api_url_2part+bible_version)
+        requesting = requests.get(
+            JSON_API_URL+str(message)+JSON_API_URL_2PART+bible_version)
         text = requesting.text[1:-2]
         jsontxt = json.loads(text)
 
         try:
             verses = list(jsontxt['book'][0]['chapter'].keys())
             full_verses = []
-            for each_verse in verses:    
-                full_verses.append((str(each_verse)+" "+ jsontxt['book'][0]['chapter'][each_verse]['verse']))
+            for each_verse in verses:
+                full_verses.append(
+                    (str(each_verse)+" " + jsontxt['book'][0]['chapter'][each_verse]['verse']))
 
-        except:
+        except (Exception) as exception:
+            print(exception)
             verses = list(jsontxt['chapter'].keys())
             full_verses = []
-            for each_verse in verses:    
-                full_verses.append((str(each_verse)+" "+ jsontxt['chapter'][each_verse]['verse']))
+            for each_verse in verses:
+                full_verses.append(
+                    (str(each_verse)+" " + jsontxt['chapter'][each_verse]['verse']))
 
-        if text=='U':
-            full_verses="Error - Passage not found"
+        if text == 'U':
+            full_verses = "Error - Passage not found"
     else:
-        full_verses="Verify the chapter of the passage"
-
+        full_verses = "Verify the chapter of the passage"
 
     final_message = "".join(full_verses)
-    return(final_message)
-    
+    return final_message
 
-def translate_message(text, language="English", src='auto'):      
+
+def translate_message(text, language="English", src='auto'):
     '''
     Translates a text from an automatic source language to English
 
@@ -159,20 +167,21 @@ def translate_message(text, language="English", src='auto'):
 
     Return:
         Translated text into the goal language
-    '''    
+    '''
     return translator.translate(text, dest=language, src=src).text
 
-def get_next_chapter(present_chapter, bible_version = 'akjv'):    
+
+def get_next_chapter(present_chapter, bible_version='akjv'):
     '''
-    Returns the next chapter in a given book and chapter 
+    Returns the next chapter in a given book and chapter
 
     Args:
-        present_chapter (str): String with a book of theb bible and chapter, for example "John 1"
+        present_chapter (str): String with a book of the bible and chapter, for example "John 1"
         bible_version (str): Version of the Bible
 
     Returns:
         text describing the next book and chapter
-        
+
     Example:
         get_next_chapter('John 1')
         > John 2
@@ -180,26 +189,26 @@ def get_next_chapter(present_chapter, bible_version = 'akjv'):
     '''
     book = verify_book(present_chapter)
     chapter = present_chapter.split(" ")[-1]
-    present_chapter = " ".join([book,chapter])
+    present_chapter = " ".join([book, chapter])
 
     try:
-        new_chapter=int(chapter)+1
-        next_chapter = " ".join([book,str(new_chapter)])
-        requesting = requests.get(json_api_url+str(next_chapter)+json_api_url_2part+bible_version)
+        new_chapter = int(chapter)+1
+        next_chapter = " ".join([book, str(new_chapter)])
+        requesting = requests.get(
+            JSON_API_URL+str(next_chapter)+JSON_API_URL_2PART+bible_version)
         text = requesting.text[1:-2]
 
         if text == 'U':
-            n = Dict_books[book]
-            new_book = Books[n+1-1]
+            number_book = Dict_books[book]
+            new_book = Books[number_book+1-1]
             new_chapter = 1
-            next_chapter = " ".join([new_book,str(new_chapter)])
-            
-    except:
-        n = 0# starting over again
-        new_book = Books[n+1-1]
+            next_chapter = " ".join([new_book, str(new_chapter)])
+
+    except (Exception) as exception:
+        print(exception)
+        number_book = 0  # starting over again
+        new_book = Books[number_book+1-1]
         new_chapter = 1
-        next_chapter = " ".join([new_book,str(new_chapter)])
+        next_chapter = " ".join([new_book, str(new_chapter)])
 
     return next_chapter
-
-

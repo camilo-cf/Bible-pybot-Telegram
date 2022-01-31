@@ -1,4 +1,4 @@
-name: Docker Snyk 
+name: Docker Snyk
 on: push
 jobs:
   snyk:
@@ -19,6 +19,6 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       with:
         image: biblepybottelegram
-        args: 
+        args:
           --file=Dockerfile
           --severity-threshold=high

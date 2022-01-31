@@ -2,7 +2,6 @@
     TODO: docstring
 """
 
-
 import logging as log
 import os
 import time
@@ -96,9 +95,10 @@ lang_transl = languages_translation_set.difference(unique_languages_api)
 ################         SUPPORT FUNCTIONS           ###################
 ########################################################################
 
-def verify_language(language_input, lang_ver_transl=list(lang_ver_transl), lang_transl=list(lang_transl)):
+def verify_language(language_input, lang_ver_transl=list(lang_ver_transl),
+                    lang_transl=list(lang_transl)):
     '''
-
+        TODO: docstring
     '''
     similarity_vec = []
     languages = lang_transl + lang_ver_transl
@@ -111,6 +111,7 @@ def verify_language(language_input, lang_ver_transl=list(lang_ver_transl), lang_
 
 def verify_version(version_input, versions=list(dict_api_ver2acr.keys())):
     '''
+        TODO: docstring
     '''
     similarity_vec = []
 
@@ -120,17 +121,18 @@ def verify_version(version_input, versions=list(dict_api_ver2acr.keys())):
     return versions[np.argmax(similarity_vec)]
 
 
-def send_translated_message(id, text, language="English"):
+def send_translated_message(user_id, text, language="English"):
     '''
+        TODO: docstring
     '''
     try:
         if language == "English":
-            bot.send_message(id, text)
+            bot.send_message(user_id, text)
         else:
             text = Bible.translate_message(
                 text, language=language, src="English")
             text = text.replace("/ ", "/")
-            bot.send_message(id, text)
+            bot.send_message(user_id, text)
     except (Exception) as exception:
         log.critical("In send translated message - Exception: ", exception)
         print("Connection Error")
@@ -144,37 +146,48 @@ def send_translated_message(id, text, language="English"):
 
 # start page
 @bot.message_handler(commands=['start'])
-def command_start(m):
-    id = m.chat.id
-    name = m.chat.first_name
+def command_start(chat_message):
+    '''
+        TODO: docstring
+    '''
+    user_id = chat_message.chat.id
+    name = chat_message.chat.first_name
 
     connection, cursor = Database_control.create_db()
-    verify_id = Database_control.verify_id(cursor, id)
+    verify_id = Database_control.verify_id(cursor, user_id)
     if verify_id == False:
-        Database_control.add_user(connection, cursor, id, name)
-    language = Database_control.get_language(cursor, id)
+        Database_control.add_user(connection, cursor, user_id, name)
+    language = Database_control.get_language(cursor, user_id)
     Database_control.close_db(connection)
 
-    start_text = "☝ This bot is a free service for educational purposes \nThis bot 🤖 can: \n\t1. Send you daily 1 chapter of the Bible in a sequence ('/subscribe') \n\t2. If you are not subscribed or want to advance more, you can manually request the chapter ('/send_chapter'). \n\t3.❓ Also you can ask for any verse or passage ('/verse') \n\nGo to help ('/help') for more information"
-    send_translated_message(m.chat.id, start_text, language)  # Send start text
-    show_mainkeyboard(m)
+    start_text = """☝ This bot is a free service for educational purposes
+                    \nThis bot 🤖 can: \n\t1.
+                    Send you daily 1 chapter of the Bible in a sequence ('/subscribe') 
+                    \n\t2. If you are not subscribed or want to advance more, you can 
+                     manually request the chapter ('/send_chapter').
+                      \n\t3.❓ Also you can ask for any verse or passage ('/verse')
+                       \n\nGo to help ('/help') for more information"""
+    send_translated_message(chat_message.chat.id, start_text, language)  # Send start text
+    show_mainkeyboard(chat_message)
 
 
 # send_chapter page
 @bot.message_handler(commands=['send_chapter'])
-def command_send_chapter(m):
-
-    id = m.chat.id
+def command_send_chapter(chat_message):
+    '''
+        TODO: docstring
+    '''
+    user_id = chat_message.chat.id
     connection, cursor = Database_control.create_db()
-    book = Database_control.get_book(cursor, id)
-    origin_language = Database_control.get_language(cursor, id)
-    chapter = Database_control.get_chapter(cursor, id)
-    bible_version = Database_control.get_bible_version(cursor, id)
-    language = Database_control.get_language(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    book = Database_control.get_book(cursor, user_id)
+    origin_language = Database_control.get_language(cursor, user_id)
+    chapter = Database_control.get_chapter(cursor, user_id)
+    bible_version = Database_control.get_bible_version(cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
 
     if verify_id:
-        send_translated_message(id, "Sending chapter  ...", language)
+        send_translated_message(user_id, "Sending chapter  ...", language)
 
         message = " ".join([book, str(chapter)])
 
@@ -189,40 +202,42 @@ def command_send_chapter(m):
                 response = Bible.translate_message(response, origin_language)
         except (Exception) as exception:
             response = "Error - please retry"
-            log.critical("In send chapter page - Exception: ", exception)
+            log.critical("Send chapter page:", exception)
 
-        send_translated_message(id, n_message, language)
+        send_translated_message(user_id, n_message, language)
         response = [i for i in telebot.util.split_string(response, 3000)]
         for each_message in response:
-            send_translated_message(id, each_message, language)
+            send_translated_message(user_id, each_message, language)
 
         next_chapter = Bible.get_next_chapter(message)
         next_book = next_chapter.split(" ")[0]
         next_chapter = next_chapter.split(" ")[1]
 
-        Database_control.set_book(connection, cursor, next_book, id)
-        Database_control.set_chapter(connection, cursor, next_chapter, id)
+        Database_control.set_book(connection, cursor, next_book, user_id)
+        Database_control.set_chapter(connection, cursor, next_chapter, user_id)
 
-        Database_control.set_mod_default(connection, cursor, id)
+        Database_control.set_mod_default(connection, cursor, user_id)
         Database_control.close_db(connection)
-        show_mainkeyboard(m)
+        show_mainkeyboard(chat_message)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
-        command_start(m)
+        command_start(chat_message)
 
 
-def command_send_chapter_crontab(id):
-
+def command_send_chapter_crontab(user_id):
+    '''
+        TODO: docstring
+    '''
     connection, cursor = Database_control.create_db()
-    book = Database_control.get_book(cursor, id)
-    origin_language = Database_control.get_language(cursor, id)
-    chapter = Database_control.get_chapter(cursor, id)
-    bible_version = Database_control.get_bible_version(cursor, id)
-    language = Database_control.get_language(cursor, id)
+    book = Database_control.get_book(cursor, user_id)
+    origin_language = Database_control.get_language(cursor, user_id)
+    chapter = Database_control.get_chapter(cursor, user_id)
+    bible_version = Database_control.get_bible_version(cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
 
-    send_translated_message(id, "Sending daily chapter", language)
+    send_translated_message(user_id, "Sending daily chapter", language)
 
     message = " ".join([book, str(chapter)])
 
@@ -243,57 +258,62 @@ def command_send_chapter_crontab(id):
 
     response = [i for i in telebot.util.split_string(response, 3000)]
 
-    send_translated_message(id, n_message, language)
+    send_translated_message(user_id, n_message, language)
 
     for each_message in response:
-        send_translated_message(id, each_message, language)
+        send_translated_message(user_id, each_message, language)
 
     next_chapter = Bible.get_next_chapter(message)
     next_book = next_chapter.split(" ")[0]
     next_chapter = next_chapter.split(" ")[1]
 
-    Database_control.set_book(connection, cursor, next_book, id)
-    Database_control.set_chapter(connection, cursor, next_chapter, id)
+    Database_control.set_book(connection, cursor, next_book, user_id)
+    Database_control.set_chapter(connection, cursor, next_chapter, user_id)
 
-    Database_control.set_mod_default(connection, cursor, id)
+    Database_control.set_mod_default(connection, cursor, user_id)
     Database_control.close_db(connection)
 
 
 # set verse page
 @bot.message_handler(commands=['verse'])
-def command_verse(m):
-
-    command_hide(m)
-    id = m.chat.id
+def command_verse(chat_message):
+    '''
+        TODO: docstring
+    '''
+    command_hide(chat_message)
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
-    Database_control.set_verse(connection, cursor, id)
-    language = Database_control.get_language(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    Database_control.set_verse(connection, cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
     Database_control.close_db(connection)
 
     if verify_id:
-        send_translated_message(id, "Type the desired passage", language)
+        send_translated_message(user_id, "Type the desired passage", language)
         Example = "Examples: \nJohn 14:6 \nGenesis 2:1-4 \nLuke 3"
-        send_translated_message(id, Example, language)
+        send_translated_message(user_id, Example, language)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
-        command_start(m)
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
+        command_start(chat_message)
 
 
 # information page
 @bot.message_handler(commands=['information'])
-def command_information(m):
-    id = m.chat.id
+def command_information(chat_message):
+    '''
+        TODO: docstring
+    '''
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
-    status = Database_control.get_status(cursor, id)
-    language = Database_control.get_language(cursor, id)
-    book = Database_control.get_book(cursor, id)
-    chapter = Database_control.get_chapter(cursor, id)
-    bible_version = Database_control.get_bible_version(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    status = Database_control.get_status(cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
+    book = Database_control.get_book(cursor, user_id)
+    chapter = Database_control.get_chapter(cursor, user_id)
+    bible_version = Database_control.get_bible_version(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
     Database_control.close_db(connection)
 
     if verify_id:
@@ -308,24 +328,29 @@ def command_information(m):
         else:
             status = '❌'
 
-        info_text = "📒 Information \n📚 Subscribed: \t"+status+"\n🌎 Language: \t"+str(language)+"\n📖 Current Bible Book: \t"+str(
-            book)+"\n📑 Current Chapter: \t"+str(chapter)+"\n📕 Current Bible Version: \t"+str(bible_version)
-        send_translated_message(m.chat.id, info_text,
+        info_text = "📒 Information \n📚 Subscribed: \t"+status+"\n🌎 Language: \t"+str(
+            language)+"\n📖 Current Bible Book: \t"+str(
+            book)+"\n📑 Current Chapter: \t"+str(
+                chapter)+"\n📕 Current Bible Version: \t"+str(bible_version)
+        send_translated_message(chat_message.chat.id, info_text,
                                 language)  # Send info text
-        show_mainkeyboard(m)
+        show_mainkeyboard(chat_message)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
-        command_start(m)
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
+        command_start(chat_message)
 
 
 # help page
 @bot.message_handler(commands=['help'])
-def command_help(m):
-    id = m.chat.id
+def command_help(chat_message):
+    '''
+        TODO: docstring
+    '''
+    user_id = chat_message.chat.id
     connection, cursor = Database_control.create_db()
-    language = Database_control.get_language(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    language = Database_control.get_language(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
     Database_control.close_db(connection)
 
     if verify_id:
@@ -333,15 +358,18 @@ def command_help(m):
         for key in commands:  # generate help text out of the commands dictionary defined at the top
             help_text += "/" + key + ": " + commands[key] + "\n"
         # send the generated help page
-        send_translated_message(id, help_text, language)
-        show_mainkeyboard(m)
+        send_translated_message(user_id, help_text, language)
+        show_mainkeyboard(chat_message)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
-        command_start(m)
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
+        command_start(chat_message)
 
 
-def show_mainkeyboard(m):
+def show_mainkeyboard(chat_message):
+    '''
+        TODO: docstring
+    '''
     start_markup = types.ReplyKeyboardMarkup(
         resize_keyboard=True, one_time_keyboard=False)
     for each in range(0, len(list(commands.keys()))):
@@ -349,12 +377,15 @@ def show_mainkeyboard(m):
 
     start_markup.row("/hide_keyboard")
 
-    bot.send_message(m.from_user.id, "⌨️❔", reply_markup=start_markup)
+    bot.send_message(chat_message.from_user.id, "⌨️❔", reply_markup=start_markup)
 
 
 # Hide keyboard
 @bot.message_handler(commands=['hide_keyboard'])
 def command_hide(message):
+    '''
+        TODO: docstring
+    '''
     # bot.send_chat_action(id, 'typing')
     hide_markup = telebot.types.ReplyKeyboardRemove()
     bot.send_message(message.chat.id, "⌨💤...", reply_markup=hide_markup)
@@ -362,12 +393,15 @@ def command_hide(message):
 
 # subscribe/ unsubscribe
 @bot.message_handler(commands=['subscribe'])
-def command_subscribe(m):
-    id = m.chat.id
+def command_subscribe(chat_message):
+    '''
+        TODO: docstring
+    '''
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
-    current_status = Database_control.get_status(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    current_status = Database_control.get_status(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
 
     if verify_id:
         if current_status == 1:
@@ -375,8 +409,8 @@ def command_subscribe(m):
         else:
             new_status = 1
 
-        Database_control.set_status(connection, cursor, new_status, id)
-        language = Database_control.get_language(cursor, id)
+        Database_control.set_status(connection, cursor, new_status, user_id)
+        language = Database_control.get_language(cursor, user_id)
         Database_control.close_db(connection)
 
         if new_status == 1:
@@ -385,85 +419,97 @@ def command_subscribe(m):
             status = '❌'
 
         text = "Subscription: \t"+status
-        send_translated_message(id, text, language)  # send the generated text
+        send_translated_message(user_id, text, language)  # send the generated text
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
-        command_start(m)
+        command_start(chat_message)
 
 
 # set language page
 @bot.message_handler(commands=['language'])
-def command_language(m):
-    command_hide(m)
-    id = m.chat.id
+def command_language(chat_message):
+    '''
+        TODO: docstring
+    '''
+    command_hide(chat_message)
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
-    Database_control.set_mod_language(connection, cursor, id)
-    language = Database_control.get_language(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    Database_control.set_mod_language(connection, cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
     Database_control.close_db(connection)
 
     if verify_id:
-        send_translated_message(id, "Type your new language", language)
+        send_translated_message(user_id, "Type your new language", language)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
-        command_start(m)
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
+        command_start(chat_message)
 
 
 # set book page
 @bot.message_handler(commands=['choose_book'])
-def command_book(m):
-    command_hide(m)
-    id = m.chat.id
+def command_book(chat_message):
+    '''
+        TODO: docstring
+    '''
+    command_hide(chat_message)
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
-    Database_control.set_mod_book(connection, cursor, id)
-    language = Database_control.get_language(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    Database_control.set_mod_book(connection, cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
     Database_control.close_db(connection)
 
     if verify_id:
-        send_translated_message(id, "Type the desired bible book", language)
+        send_translated_message(user_id, "Type the desired bible book", language)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
-        command_start(m)
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
+        command_start(chat_message)
 
 
 # set current chapter
 @bot.message_handler(commands=['choose_chapter'])
-def command_chapter(m):
-    command_hide(m)
-    id = m.chat.id
+def command_chapter(chat_message):
+    '''
+        TODO: docstring
+    '''
+    command_hide(chat_message)
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
-    Database_control.set_mod_chapter(connection, cursor, id)
-    language = Database_control.get_language(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    Database_control.set_mod_chapter(connection, cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
     Database_control.close_db(connection)
 
     if verify_id:
         send_translated_message(
-            id, "Type the number of the desired chapter to start with", language)
+            user_id, "Type the number of the desired chapter to start with", language)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
-        command_start(m)
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
+        command_start(chat_message)
 
 
 @bot.message_handler(commands=['bible_version'])
-def command_bible_version(m):
-    command_hide(m)
-    id = m.chat.id
+def command_bible_version(chat_message):
+    '''
+        TODO: docstring
+    '''
+    command_hide(chat_message)
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
 
-    Database_control.set_mod_bible_version(connection, cursor, id)
-    language = Database_control.get_language(cursor, id)
-    verify_id = Database_control.verify_id(cursor, id)
+    Database_control.set_mod_bible_version(connection, cursor, user_id)
+    language = Database_control.get_language(cursor, user_id)
+    verify_id = Database_control.verify_id(cursor, user_id)
 
     if verify_id:
         if language in dict_api_version:
@@ -477,64 +523,67 @@ def command_bible_version(m):
         for each in range(0, len(versions)):
             version_markup.row(versions[each])
 
-        Database_control.set_mod_default(connection, cursor, id)
-        Database_control.set_mod_bible_version(connection, cursor, id)
+        Database_control.set_mod_default(connection, cursor, user_id)
+        Database_control.set_mod_bible_version(connection, cursor, user_id)
         Database_control.close_db(connection)
 
-        bot.send_message(m.from_user.id, "⌨️", reply_markup=version_markup)
+        bot.send_message(chat_message.from_user.id, "⌨️", reply_markup=version_markup)
     else:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
-        command_start(m)
+        command_start(chat_message)
 
 
 # default handler for every other text
 @bot.message_handler(func=lambda message: True, content_types=['text'])
-def command_default(m):
-    id = m.chat.id
+def command_default(chat_message):
+    '''
+        TODO: docstring
+        TODO - put all in a tuple instead single queries - optimize db queries
+    '''
+    user_id = chat_message.chat.id
 
     connection, cursor = Database_control.create_db()
 
-    if Database_control.verify_id(cursor, id) == False:
+    if Database_control.verify_id(cursor, user_id) == False:
         send_translated_message(
-            m.chat.id, "You are a new user. Check what I can do at /start")
+            chat_message.chat.id, "You are a new user. Check what I can do at /start")
         Database_control.close_db(connection)
-        command_start(m)
+        command_start(chat_message)
     else:
-        # TODO - put all in a tuple instead single queries - optimize db queries
-        lang_selection = Database_control.get_mod_language(cursor, id)
-        bible_book_selection = Database_control.get_mod_book(cursor, id)
-        chapter_selection = Database_control.get_mod_chapter(cursor, id)
+        lang_selection = Database_control.get_mod_language(cursor, user_id)
+        bible_book_selection = Database_control.get_mod_book(cursor, user_id)
+        chapter_selection = Database_control.get_mod_chapter(cursor, user_id)
         bible_version_selection = Database_control.get_mod_bible_version(
-            cursor, id)
+            cursor, user_id)
 
-        verse = Database_control.get_verse(cursor, id)
-        origin_language = Database_control.get_language(cursor, id)
-        bible_version = Database_control.get_bible_version(cursor, id)
+        verse = Database_control.get_verse(cursor, user_id)
+        origin_language = Database_control.get_language(cursor, user_id)
+        bible_version = Database_control.get_bible_version(cursor, user_id)
 
         if lang_selection == True:
-            language = verify_language(m.text)
-            Database_control.set_language(connection, cursor, language, id)
-            Database_control.set_mod_language(connection, cursor, id)
+            language = verify_language(chat_message.text)
+            Database_control.set_language(connection, cursor, language, user_id)
+            Database_control.set_mod_language(connection, cursor, user_id)
 
             if language in dict_api_version:
                 Database_control.set_bible_version(
-                    connection, cursor, dict_api_ver2acr[dict_api_version[language][0]], id)
+                    connection, cursor, dict_api_ver2acr[dict_api_version[language][0]], user_id)
             else:
                 Database_control.set_bible_version(
-                    connection, cursor, 'akjv', id)
+                    connection, cursor, 'akjv', user_id)
 
             send_translated_message(
-                m.chat.id, "The selected language is " + language, origin_language)
-            Database_control.set_mod_default(connection, cursor, id)
+                chat_message.chat.id, "The selected language is " + language, origin_language)
+            Database_control.set_mod_default(connection, cursor, user_id)
             Database_control.close_db(connection)
-            show_mainkeyboard(m)
+            show_mainkeyboard(chat_message)
 
         elif verse == True:
             send_translated_message(
-                id, "Accepted request - Searching ...", origin_language)
-            message = m.text
+                user_id, "Accepted request - Searching ...", origin_language)
+            message = chat_message.text
 
             try:
                 if origin_language in lang_ver_transl:
@@ -562,24 +611,24 @@ def command_default(m):
                     response = Bible.translate_message(
                         response, origin_language)
 
-                Database_control.set_verse(connection, cursor, id)
+                Database_control.set_verse(connection, cursor, user_id)
 
             except (Exception) as exception:
                 log.critical("In message handler - Exception: ", exception)
 
             response = [i for i in telebot.util.split_string(response, 3000)]
             for each_message in response:
-                send_translated_message(id, each_message, origin_language)
+                send_translated_message(user_id, each_message, origin_language)
 
-            Database_control.set_mod_default(connection, cursor, id)
+            Database_control.set_mod_default(connection, cursor, user_id)
             Database_control.close_db(connection)
-            show_mainkeyboard(m)
+            show_mainkeyboard(chat_message)
 
         elif bible_book_selection == True:
-            message = m.text
-            command_hide(m)
+            message = chat_message.text
+            command_hide(chat_message)
 
-            if origin_language in (list(lang_ver_transl)+list(lang_transl)):
+            if origin_language in list(lang_ver_transl)+list(lang_transl):
                 if origin_language != 'English':
                     n_message = Bible.translate_message(
                         message, language="English", src=origin_language)
@@ -590,63 +639,72 @@ def command_default(m):
 
             else:
                 send_translated_message(
-                    m.chat.id, "As your language is not available, please write in English", origin_language)
+                    chat_message.chat.id,
+                    "As your language is not available, please write in English",
+                    origin_language)
                 n_message = message
 
             book = Bible.verify_book(n_message)
 
-            Database_control.set_book(connection, cursor, book, id)
-            Database_control.set_mod_book(connection, cursor, id)
-            Database_control.set_mod_default(connection, cursor, id)
+            Database_control.set_book(connection, cursor, book, user_id)
+            Database_control.set_mod_book(connection, cursor, user_id)
+            Database_control.set_mod_default(connection, cursor, user_id)
 
             send_translated_message(
-                m.chat.id, "The selected Book is " + book, origin_language)
+                chat_message.chat.id, "The selected Book is " + book, origin_language)
             Database_control.close_db(connection)
-            show_mainkeyboard(m)
+            show_mainkeyboard(chat_message)
 
         elif chapter_selection == True:
-            message = m.text
-            book = Database_control.get_book(cursor, id)
+            message = chat_message.text
+            book = Database_control.get_book(cursor, user_id)
 
             if message.isnumeric():
                 if (Bible.verify_book_chapter(book, message) == True) and (int(message) >= 1):
                     Database_control.set_chapter(
-                        connection, cursor, message, id)
+                        connection, cursor, message, user_id)
                     send_translated_message(
-                        m.chat.id, "The selected chapter is " + message, origin_language)
+                        chat_message.chat.id, "The selected chapter is " + message, origin_language)
                 else:
                     send_translated_message(
-                        m.chat.id, "This chapter doesn't exist for the book of "+book+". \nChapter 1 selected.", origin_language)
+                        chat_message.chat.id,
+                        "This chapter doesn't exist for the book of "+
+                        book+". \nChapter 1 selected.",
+                        origin_language)
                     message = "1"
-                    Database_control.set_chapter(connection, cursor, "1", id)
+                    Database_control.set_chapter(connection, cursor, "1", user_id)
 
             else:
                 message = "1"
                 send_translated_message(
-                    m.chat.id, "This is not a number. \nChapter 1 selected.", origin_language)
-                Database_control.set_chapter(connection, cursor, "1", id)
+                    chat_message.chat.id,
+                    "This is not a number. \nChapter 1 selected.",
+                    origin_language)
+                Database_control.set_chapter(connection, cursor, "1", user_id)
 
-            Database_control.set_mod_book(connection, cursor, id)
-            Database_control.set_mod_default(connection, cursor, id)
+            Database_control.set_mod_book(connection, cursor, user_id)
+            Database_control.set_mod_default(connection, cursor, user_id)
             Database_control.close_db(connection)
-            show_mainkeyboard(m)
+            show_mainkeyboard(chat_message)
 
         elif bible_version_selection == True:
-            message = m.text
-            command_hide(m)
+            message = chat_message.text
+            command_hide(chat_message)
             version = verify_version(message)
             acr = dict_api_ver2acr[version]
-            Database_control.set_bible_version(connection, cursor, acr, id)
-            Database_control.set_mod_default(connection, cursor, id)
+            Database_control.set_bible_version(connection, cursor, acr, user_id)
+            Database_control.set_mod_default(connection, cursor, user_id)
             Database_control.close_db(connection)
-            show_mainkeyboard(m)
+            show_mainkeyboard(chat_message)
 
         else:
             send_translated_message(
-                m.chat.id, "I don't understand. \nTry the help page at '/help'", origin_language)
-            Database_control.set_mod_default(connection, cursor, id)
+                chat_message.chat.id,
+                "I don't understand. \nTry the help page at '/help'",
+                origin_language)
+            Database_control.set_mod_default(connection, cursor, user_id)
             Database_control.close_db(connection)
-            show_mainkeyboard(m)
+            show_mainkeyboard(chat_message)
 
     Database_control.close_db(connection)
 

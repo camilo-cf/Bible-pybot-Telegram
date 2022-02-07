@@ -1,4 +1,4 @@
-FROM ubuntu:impish-20211015
+FROM ubuntu:rolling
 ARG BOT_TOKEN="${BOT_TOKEN}"
 ENV BOT_TOKEN ${BOT_TOKEN}
 COPY . /app 

@@ -1,5 +1,5 @@
 """
-    TODO: docstring
+    Main code for the Bible-bot with Telegram
 """
 
 import logging as log
@@ -11,8 +11,8 @@ import numpy as np
 import telebot
 from telebot import types
 
-import Bible
-import Database_control
+import utils.Bible as Bible
+import utils.database_control as Database_control
 
 ########################################################################
 ######################         Constants          ######################

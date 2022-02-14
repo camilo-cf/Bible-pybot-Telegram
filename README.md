@@ -39,18 +39,6 @@ The frontend of this bot is in telegram using the **pyTelegramBotAPI** library. 
 
 The translation are done with the **googletrans** library.
 
-# Requirements
-
-I worked mainly with the next libraries (you can install them using pip):
-
-```
-pyTelegramBotAPI == 3.6.6
-numpy == 1.17.1
-googletrans ==  3.0.0
-requests == 2.22.0
-```
-Don't forget to add your telegram TOKEN to your config.txt file.
-
 # Deployment
 
 You can deploy it as you want Heroku, pythoneverywhere, your server etc.

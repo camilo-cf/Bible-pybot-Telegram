@@ -7,36 +7,23 @@ from googletrans import Translator
 import numpy as np
 import requests
 
+import utils.constants as constants
+
 ########################################################################
 ######################         Constants          ######################
 ########################################################################
-
-Books = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua',
-         'Judges', 'Ruth', '1Samuel', '2Samuel', '1Kings', '2Kings', '1Chronicles',
-         '2Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
-         'Ecclesiastes', 'SongofSolomon', 'Isaiah', 'Jeremiah', 'Lamentations',
-         'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah',
-         'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi',
-         'Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1Corinthians',
-         '2Corinthians', 'Galatians', 'Ephesians', 'Philippians', 'Colossians',
-         '1Thessalonians', '2Thessalonians', '1Timothy', '2Timothy', 'Titus',
-         'Philemon', 'Hebrews', 'James', '1Peter', '2Peter', '1John', '2John',
-         '3John', 'Jude', 'Revelation']
-
-Dict_books = dict(zip(Books, range(1, len(Books)+1)))
-
-JSON_API_URL = "https://getbible.net/json?passage="
-JSON_API_URL_2PART = "&version="
-
-# Constructor of the translator
-translator = Translator()
-
+Books = constants.BOOKS
+Dict_books = constants.DICT_BOOKS
+JSON_API_URL = constants.JSON_API_URL
+JSON_API_URL_2PART = constants.JSON_API_URL_2PART
 ########################################################################
 
 
 ########################################################################
 ######################         Functions          ######################
 ########################################################################
+# Constructor of the translator
+translator = Translator()
 
 def similar(string_1, string_2):
     '''
@@ -68,6 +55,7 @@ def verify_book(book, books=Books):
     for each in books:
         similarity_vec.append(similar(book, each))
     return books[np.argmax(similarity_vec)]
+
 
 def verify_book_chapter(book, chapter, bible_version='akjv'):
     '''
@@ -133,27 +121,28 @@ def get_message(message, bible_version='akjv'):
         jsontxt = json.loads(text)
 
         try:
-            verses = list(jsontxt['book'][0]['chapter'].keys())
-            full_verses = []
-            for each_verse in verses:
-                full_verses.append(
-                    (str(each_verse)+" " + jsontxt['book'][0]['chapter'][each_verse]['verse']))
+            verses = list(jsontxt["book"][0]["chapter"].keys())
+            full_verses = [
+                str(each_verse)
+                + " "
+                + jsontxt['book'][0]['chapter'][each_verse]['verse']
+                for each_verse in verses
+            ]
 
-        except (Exception) as exception:
+        except Exception as exception:
             print(exception)
             verses = list(jsontxt['chapter'].keys())
-            full_verses = []
-            for each_verse in verses:
-                full_verses.append(
-                    (str(each_verse)+" " + jsontxt['chapter'][each_verse]['verse']))
+            full_verses = [
+                str(each_verse) + ' ' + jsontxt['chapter'][each_verse]['verse']
+                for each_verse in verses
+            ]
 
         if text == 'U':
             full_verses = "Error - Passage not found"
     else:
         full_verses = "Verify the chapter of the passage"
 
-    final_message = "".join(full_verses)
-    return final_message
+    return "".join(full_verses)
 
 
 def translate_message(text, language="English", src='auto'):

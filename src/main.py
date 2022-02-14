@@ -3,7 +3,6 @@
 """
 
 import logging as log
-import os
 import time
 
 from googletrans import Translator
@@ -11,33 +10,19 @@ import numpy as np
 import telebot
 from telebot import types
 
-import utils.Bible as Bible
-import utils.database_control as Database_control
+from utils import bible as Bible
+from utils import constants
+from utils import database_control as Database_control
 
 ########################################################################
 ######################         Constants          ######################
 ########################################################################
 
 # Telegram TOKEN
-TOKEN = os.getenv("BOT_TOKEN")
-
-# create a new Telegram Bot object
-bot = telebot.TeleBot(TOKEN)
+TOKEN = constants.TOKEN
 
 # command description used in the "help" command
-commands = {
-    'start': '☝ Know what can I do',
-    'send_chapter': '📧 Send now the chapter to read',
-    'verse': '⛪ Request a Bible passage',
-    'information': '📒 Know your information and settings for this bot',
-    'help': '❔ Gives you information about the available commands',
-    'subscribe': '📚 Receive 1 Bible chapter every day at a given time or Cancel it',
-    'language': '🌎 Select your preferred language',
-    'choose_book': '📖 Select the current bible book you are reading',
-    'choose_chapter': '📑 Select the current chapter you want to start reading',
-    'bible_version': '📕 Select the bible version'
-}
-
+commands = constants.COMMANDS
 
 ########################################################################
 ######################         LANGUAGES          ######################
@@ -47,53 +32,22 @@ commands = {
 translator = Translator()
 
 # Available Languages and Versions in the API
-f = open(os.path.join(os.getcwd(), "src", "languages_api.txt"), "r")
-bible_api_list = []
-for x in f:
-    bible_api_list.append(x[4:])
-f.close()
-
-dict_api_version = {}
-languages_api = []
-
-for each_language in bible_api_list:
-    language = each_language.split(":")[0]
-    languages_api.append(language)
-    dict_api_version[language] = []
-
-acronyms_api = []
-version_api = []
-
-for each in bible_api_list:
-    language = each.split(":")[0]
-    acronym = each.split("(")[-1].split(")")[0]
-    version = each.split(":")[1].split(acronym)[0][:-1]
-
-    acronyms_api.append(acronym)
-    version_api.append(version)
-
-    dict_api_version[language].append(version)
-
-dict_api_ver2acr = dict(zip(version_api, acronyms_api))
-dict_api_acr2ver = dict(zip(acronyms_api, version_api))
-unique_languages_api = set(languages_api)
-
-# Available translation languages
-f = open(os.path.join(os.getcwd(), "src", "language_translate.txt"), "r")
-languages_translation = []
-for each in f:
-    languages_translation.append(each.split("\n")[0])
-f.close()
+dict_api_version = constants.dict_api_version
+dict_api_ver2acr = constants.dict_api_ver2acr
+dict_api_acr2ver = constants.dict_api_acr2ver
+unique_languages_api = constants.unique_languages_api
 
 # Languages comparison
-languages_translation_set = set(languages_translation)
-lang_ver_transl = languages_translation_set.intersection(unique_languages_api)
-lang_transl = languages_translation_set.difference(unique_languages_api)
-
+languages_translation_set = constants.languages_translation_set
+lang_ver_transl = constants.lang_ver_transl
+lang_transl = constants.lang_transl
 
 ########################################################################
 ################         SUPPORT FUNCTIONS           ###################
 ########################################################################
+
+# create a new Telegram Bot object
+bot = telebot.TeleBot(TOKEN)
 
 def verify_language(language_input, lang_ver_transl=list(lang_ver_transl),
                     lang_transl=list(lang_transl)):
@@ -143,7 +97,6 @@ def send_translated_message(user_id, text, language="English"):
 ########################################################################
 ################         ACTION FUNCTIONS           ###################
 ########################################################################
-
 # start page
 @bot.message_handler(commands=['start'])
 def command_start(chat_message):
@@ -707,7 +660,7 @@ def command_default(chat_message):
             show_mainkeyboard(chat_message)
 
     Database_control.close_db(connection)
-
+    
 
 ########################################################################
 ################            MAIN FUNCTION             ##################

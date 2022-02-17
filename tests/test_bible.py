@@ -26,7 +26,7 @@ class TestBible(unittest.TestCase):
                     0, len(word_list)-1)] = random.choice(string.ascii_lowercase)
             word = "".join(word_list)
 
-            self.assertEqual(bible.verify_book(each, K.BOOKS), each)
+            self.assertEqual(bible.verify_book(word, K.BOOKS), each)
 
     def test_verify_book_chapter(self):
         for book, n_chapters in K.TEST_BOOK_CHAPTERS.items():

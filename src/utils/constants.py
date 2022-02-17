@@ -3,19 +3,75 @@
 """
 import os
 
-BOOKS = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua',
-         'Judges', 'Ruth', '1Samuel', '2Samuel', '1Kings', '2Kings', '1Chronicles',
-         '2Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs',
-         'Ecclesiastes', 'SongofSolomon', 'Isaiah', 'Jeremiah', 'Lamentations',
-         'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah',
-         'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi',
-         'Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1Corinthians',
-         '2Corinthians', 'Galatians', 'Ephesians', 'Philippians', 'Colossians',
-         '1Thessalonians', '2Thessalonians', '1Timothy', '2Timothy', 'Titus',
-         'Philemon', 'Hebrews', 'James', '1Peter', '2Peter', '1John', '2John',
-         '3John', 'Jude', 'Revelation']
+BOOKS = [
+    'Genesis',
+    'Exodus',
+    'Leviticus',
+    'Numbers',
+    'Deuteronomy',
+    'Joshua',
+    'Judges',
+    'Ruth',
+    '1Samuel',
+    '2Samuel',
+    '1Kings',
+    '2Kings',
+    '1Chronicles',
+    '2Chronicles',
+    'Ezra',
+    'Nehemiah',
+    'Esther',
+    'Job',
+    'Psalms',
+    'Proverbs',
+    'Ecclesiastes',
+    'SongofSolomon',
+    'Isaiah',
+    'Jeremiah',
+    'Lamentations',
+    'Ezekiel',
+    'Daniel',
+    'Hosea',
+    'Joel',
+    'Amos',
+    'Obadiah',
+    'Jonah',
+    'Micah',
+    'Nahum',
+    'Habakkuk',
+    'Zephaniah',
+    'Haggai',
+    'Zechariah',
+    'Malachi',
+    'Matthew',
+    'Mark',
+    'Luke',
+    'John',
+    'Acts',
+    'Romans',
+    '1Corinthians',
+    '2Corinthians',
+    'Galatians',
+    'Ephesians',
+    'Philippians',
+    'Colossians',
+    '1Thessalonians',
+    '2Thessalonians',
+    '1Timothy',
+    '2Timothy',
+    'Titus',
+    'Philemon',
+    'Hebrews',
+    'James',
+    '1Peter',
+    '2Peter',
+    '1John',
+    '2John',
+    '3John',
+    'Jude',
+    'Revelation']
 
-DICT_BOOKS = dict(zip(BOOKS, range(1, len(BOOKS)+1)))
+DICT_BOOKS = dict(zip(BOOKS, range(1, len(BOOKS) + 1)))
 
 JSON_API_URL = "https://getbible.net/json?passage="
 JSON_API_URL_2PART = "&version="
@@ -34,25 +90,75 @@ COMMANDS = {
     'language': '🌎 Select your preferred language',
     'choose_book': '📖 Select the current bible book you are reading',
     'choose_chapter': '📑 Select the current chapter you want to start reading',
-    'bible_version': '📕 Select the bible version'
-}
+    'bible_version': '📕 Select the bible version'}
 
-TEST_BOOK_CHAPTERS = {'Genesis': 50, 'Exodus': 40, 'Leviticus': 27, 'Numbers': 36
-                       , 'Deuteronomy': 34, 'Joshua': 24, 'Judges': 21, 'Ruth': 4
-                       , '1 Samuel': 31, '2 Samuel': 24, '1 Kings': 22, '2 Kings': 25
-                       , '1 Chronicles': 29, '2 Chronicles': 36, 'Ezra': 10
-                       , 'Nehemiah': 13, 'Esther': 10, 'Job': 42, 'Psalms': 150
-                       , 'Proverbs': 31, 'Ecclesiastes': 12, 'Song of Solomon': 8
-                       , 'Isaiah': 66, 'Jeremiah': 52, 'Lamentations': 5, 'Ezekiel': 48
-                       , 'Daniel': 12, 'Hosea': 14, 'Joel': 3, 'Amos': 9, 'Obadiah': 1
-                       , 'Jonah': 4, 'Micah': 7, 'Nahum': 3, 'Habakkuk': 3, 'Zephaniah': 3
-                       , 'Haggai': 2, 'Zechariah': 14, 'Malachi': 4, 'Matthew': 28, 'Mark': 16
-                       , 'Luke': 24, 'John': 21, 'Acts': 28, 'Romans': 16, '1 Corinthians': 16
-                       , '2 Corinthians': 13, 'Galatians': 6, 'Ephesians': 6, 'Philippians': 4
-                       , 'Colossians': 4, '1 Thessalonians': 5, '2 Thessalonians': 3, '1 Timothy': 6
-                       , '2 Timothy': 4, 'Titus': 3, 'Philemon': 1, 'Hebrews': 13, 'James': 5
-                       , '1 Peter': 5, '2 Peter': 3, '1 John': 5, '2 John': 1, '3 John': 1
-                       , 'Jude': 1, 'Revelation': 22}
+TEST_BOOK_CHAPTERS = {
+    'Genesis': 50,
+    'Exodus': 40,
+    'Leviticus': 27,
+    'Numbers': 36,
+    'Deuteronomy': 34,
+    'Joshua': 24,
+    'Judges': 21,
+    'Ruth': 4,
+    '1 Samuel': 31,
+    '2 Samuel': 24,
+    '1 Kings': 22,
+    '2 Kings': 25,
+    '1 Chronicles': 29,
+    '2 Chronicles': 36,
+    'Ezra': 10,
+    'Nehemiah': 13,
+    'Esther': 10,
+    'Job': 42,
+    'Psalms': 150,
+    'Proverbs': 31,
+    'Ecclesiastes': 12,
+    'Song of Solomon': 8,
+    'Isaiah': 66,
+    'Jeremiah': 52,
+    'Lamentations': 5,
+    'Ezekiel': 48,
+    'Daniel': 12,
+    'Hosea': 14,
+    'Joel': 3,
+    'Amos': 9,
+    'Obadiah': 1,
+    'Jonah': 4,
+    'Micah': 7,
+    'Nahum': 3,
+    'Habakkuk': 3,
+    'Zephaniah': 3,
+    'Haggai': 2,
+    'Zechariah': 14,
+    'Malachi': 4,
+    'Matthew': 28,
+    'Mark': 16,
+    'Luke': 24,
+    'John': 21,
+    'Acts': 28,
+    'Romans': 16,
+    '1 Corinthians': 16,
+    '2 Corinthians': 13,
+    'Galatians': 6,
+    'Ephesians': 6,
+    'Philippians': 4,
+    'Colossians': 4,
+    '1 Thessalonians': 5,
+    '2 Thessalonians': 3,
+    '1 Timothy': 6,
+    '2 Timothy': 4,
+    'Titus': 3,
+    'Philemon': 1,
+    'Hebrews': 13,
+    'James': 5,
+    '1 Peter': 5,
+    '2 Peter': 3,
+    '1 John': 5,
+    '2 John': 1,
+    '3 John': 1,
+    'Jude': 1,
+    'Revelation': 22}
 
 
 # Available Languages and Versions in the API
@@ -88,7 +194,12 @@ dict_api_acr2ver = dict(zip(acronyms_api, version_api))
 unique_languages_api = set(languages_api)
 
 # Available translation languages
-f = open(os.path.join(os.getcwd(), "src/utils/", "language_translate.txt"), "r")
+f = open(
+    os.path.join(
+        os.getcwd(),
+        "src/utils/",
+        "language_translate.txt"),
+    "r")
 languages_translation = []
 for each in f:
     languages_translation.append(each.split("\n")[0])

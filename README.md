@@ -2,6 +2,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/camilo-cf/bible-pybot-telegram/badge)](https://www.codefactor.io/repository/github/camilo-cf/bible-pybot-telegram)
 [![Maintainability](https://api.codeclimate.com/v1/badges/39e59bfbd5a36e37a24f/maintainability)](https://codeclimate.com/github/camilo-cf/Bible-pybot-Telegram/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/39e59bfbd5a36e37a24f/test_coverage)](https://codeclimate.com/github/camilo-cf/Bible-pybot-Telegram/test_coverage)
+[![codecov](https://codecov.io/gh/camilo-cf/Bible-pybot-Telegram/branch/master/graph/badge.svg?token=53XILYFINM)](https://codecov.io/gh/camilo-cf/Bible-pybot-Telegram)
 [![Known Vulnerabilities](https://snyk.io/test/github/camilo-cf/bible-pybot-telegram/badge.svg)](https://snyk.io/test/github/camilo-cf/bible-pybot-telegram)
 
 

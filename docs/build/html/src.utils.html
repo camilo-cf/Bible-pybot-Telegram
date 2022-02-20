@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.utils package &mdash; Bible-pybot-Telegram  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="src package" href="src.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Bible-pybot-Telegram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">src package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">src.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.utils.bible">src.utils.bible module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#src-utils-constants-module">src.utils.constants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.utils.database_control">src.utils.database_control module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.utils.queries">src.utils.queries module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Bible-pybot-Telegram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">src</a> &raquo;</li>
+          <li><a href="src.html">src package</a> &raquo;</li>
+      <li>src.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="src-utils-package">
+<h1>src.utils package<a class="headerlink" href="#src-utils-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-src.utils.bible">
+<span id="src-utils-bible-module"></span><h2>src.utils.bible module<a class="headerlink" href="#module-src.utils.bible" title="Permalink to this headline"></a></h2>
+<p>Library of Bible functions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.bible.get_chapter">
+<span class="sig-prename descclassname"><span class="pre">src.utils.bible.</span></span><span class="sig-name descname"><span class="pre">get_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">book</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chapter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bible_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'akjv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/bible.html#get_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.bible.get_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>Gey the Bible chapter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>book</strong> (<em>str</em>) – Given book of the Bible</p></li>
+<li><p><strong>chapter</strong> (<em>int</em>) – Given chapter number</p></li>
+<li><p><strong>bible_version</strong> (<em>str</em>) – Version of the Bible</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The message of the bible in the given book and chapter (str) [it can be long]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.bible.get_message">
+<span class="sig-prename descclassname"><span class="pre">src.utils.bible.</span></span><span class="sig-name descname"><span class="pre">get_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bible_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'akjv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/bible.html#get_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.bible.get_message" title="Permalink to this definition"></a></dt>
+<dd><p>Get the passage of the Bible given an income message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – An input text that should be something like
+“John 14:6” or “Exodus 17:1-6” or “Genesis 1”.</p></li>
+<li><p><strong>bible_version</strong> (<em>str</em>) – Version of the Bible.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The message of the bible in the given book and chapter (str) [it can be long].</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.bible.get_next_chapter">
+<span class="sig-prename descclassname"><span class="pre">src.utils.bible.</span></span><span class="sig-name descname"><span class="pre">get_next_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">present_chapter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bible_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'akjv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/bible.html#get_next_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.bible.get_next_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the next chapter in a given book and chapter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>present_chapter</strong> (<em>str</em>) – String with a book of the bible and chapter, for example “John 1”</p></li>
+<li><p><strong>bible_version</strong> (<em>str</em>) – Version of the Bible</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>text describing the next book and chapter</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>get_next_chapter(‘John 1’)
+&gt; John 2</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.bible.similar">
+<span class="sig-prename descclassname"><span class="pre">src.utils.bible.</span></span><span class="sig-name descname"><span class="pre">similar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/bible.html#similar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.bible.similar" title="Permalink to this definition"></a></dt>
+<dd><p>Compares to strings and verify their similarity ratio</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>string_1</strong> (<em>str</em>) – String to be compared</p></li>
+<li><p><strong>string_2</strong> (<em>str</em>) – String to be compared</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>similarity ratio (float betweenn 0.0 - 1.0)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.bible.translate_message">
+<span class="sig-prename descclassname"><span class="pre">src.utils.bible.</span></span><span class="sig-name descname"><span class="pre">translate_message</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'English'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/bible.html#translate_message"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.bible.translate_message" title="Permalink to this definition"></a></dt>
+<dd><p>Translates a text from an automatic source language to English</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – text to be translated</p></li>
+<li><p><strong>language</strong> (<em>str</em>) – objective language</p></li>
+<li><p><strong>src</strong> (<em>str</em>) – source language</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Translated text into the goal language</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.bible.verify_book">
+<span class="sig-prename descclassname"><span class="pre">src.utils.bible.</span></span><span class="sig-name descname"><span class="pre">verify_book</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">book</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">books</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">utils.constants.BOOKS</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/bible.html#verify_book"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.bible.verify_book" title="Permalink to this definition"></a></dt>
+<dd><p>Verify and Identify the book (input) according to the Books list,
+returns the most similar book name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>book</strong> (<em>str</em>) – Input of the user you want to verify</p></li>
+<li><p><strong>books</strong> (<em>list</em>) – List of known books (given by default in constants)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The most similar book to the input in the list (str)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.bible.verify_book_chapter">
+<span class="sig-prename descclassname"><span class="pre">src.utils.bible.</span></span><span class="sig-name descname"><span class="pre">verify_book_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">book</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chapter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bible_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'akjv'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/bible.html#verify_book_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.bible.verify_book_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>Verify the if the given chapter of a given book exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>book</strong> (<em>str</em>) – Given book of the Bible</p></li>
+<li><p><strong>chapter</strong> (<em>int</em>) – Given chapter number</p></li>
+<li><p><strong>bible_version</strong> (<em>str</em>) – Version of the Bible</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>boolean telling if the chapter exists (True) or no (False)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="src-utils-constants-module">
+<h2>src.utils.constants module<a class="headerlink" href="#src-utils-constants-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-src.utils.database_control">
+<span id="src-utils-database-control-module"></span><h2>src.utils.database_control module<a class="headerlink" href="#module-src.utils.database_control" title="Permalink to this headline"></a></h2>
+<p>Database functions for the user management</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.add_user">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">add_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#add_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.add_user" title="Permalink to this definition"></a></dt>
+<dd><p>Add a new user in the database</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection</strong> – Database connection</p></li>
+<li><p><strong>cursor</strong> – Database cursor</p></li>
+<li><p><strong>user_id</strong> (<em>int</em>) – ID in telegram for the user chat</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the user</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.close_db">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">close_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#close_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.close_db" title="Permalink to this definition"></a></dt>
+<dd><p>Close the database connection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>connection</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.create_db">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">create_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#create_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.create_db" title="Permalink to this definition"></a></dt>
+<dd><p>Create or initialize the database for the application</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>connection, cursor</dt><dd><p>Objects to interact and manipulate a dabatase.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_bible_version">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_bible_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_bible_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_bible_version" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_book">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_book</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_book"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_book" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_chapter">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_language">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_language"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_language" title="Permalink to this definition"></a></dt>
+<dd><p>Get the language of a given user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cursor</strong> – Database cursor</p></li>
+<li><p><strong>user_id</strong> (<em>int</em>) – ID of the user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Language of the user</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_mod_bible_version">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_mod_bible_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_mod_bible_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_mod_bible_version" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_mod_book">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_mod_book</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_mod_book"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_mod_book" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_mod_chapter">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_mod_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_mod_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_mod_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_mod_language">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_mod_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_mod_language"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_mod_language" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_status">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_status" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_subscribed_user">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_subscribed_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_subscribed_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_subscribed_user" title="Permalink to this definition"></a></dt>
+<dd><p>Get the id list of the subscribed users</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cursor</strong> – Database cursor</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of subscribed users IDs</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.get_verse">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">get_verse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#get_verse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.get_verse" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.read_db">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">read_db</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#read_db"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.read_db" title="Permalink to this definition"></a></dt>
+<dd><p>Read all the database</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_bible_version">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_bible_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_bible_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_bible_version" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_book">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_book</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">book</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_book"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_book" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_chapter">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chapter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_language">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_language"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_language" title="Permalink to this definition"></a></dt>
+<dd><p>Set a language for a given user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection</strong> – Database connection</p></li>
+<li><p><strong>cursor</strong> – Database cursor</p></li>
+<li><p><strong>language</strong> (<em>str</em>) – Name of the desired user language</p></li>
+<li><p><strong>user_id</strong> (<em>int</em>) – ID of the user</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_mod_bible_version">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_mod_bible_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_mod_bible_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_mod_bible_version" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_mod_book">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_mod_book</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_mod_book"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_mod_book" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_mod_chapter">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_mod_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_mod_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_mod_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_mod_default">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_mod_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_mod_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_mod_default" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_mod_language">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_mod_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_mod_language"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_mod_language" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_status">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_status" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.set_verse">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">set_verse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#set_verse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.set_verse" title="Permalink to this definition"></a></dt>
+<dd><p>TODO: Add description</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.utils.database_control.verify_id">
+<span class="sig-prename descclassname"><span class="pre">src.utils.database_control.</span></span><span class="sig-name descname"><span class="pre">verify_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cursor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/src/utils/database_control.html#verify_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.database_control.verify_id" title="Permalink to this definition"></a></dt>
+<dd><p>Verify if an user exists</p>
+</dd></dl>
+
+</section>
+<section id="module-src.utils.queries">
+<span id="src-utils-queries-module"></span><h2>src.utils.queries module<a class="headerlink" href="#module-src.utils.queries" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-src.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.utils" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="src.html" class="btn btn-neutral float-left" title="src package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Camilo Caceres F.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

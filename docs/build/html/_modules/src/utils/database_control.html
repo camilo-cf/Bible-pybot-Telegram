@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.utils.database_control &mdash; Bible-pybot-Telegram  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Bible-pybot-Telegram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../src.html">src package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../src.utils.html">src.utils package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../utils.html">utils package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Bible-pybot-Telegram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>src.utils.database_control</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.utils.database_control</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Database functions for the user management</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+
+
+<div class="viewcode-block" id="create_db"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.create_db">[docs]</a><span class="k">def</span> <span class="nf">create_db</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Create or initialize the database for the application</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        connection, cursor</span>
+<span class="sd">            Objects to interact and manipulate a dabatase.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;data/users.db&quot;</span><span class="p">)</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">sql_command</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    CREATE TABLE IF NOT EXISTS users ( </span>
+<span class="s2">        id          INTEGER         PRIMARY KEY     NOT NULL, </span>
+<span class="s2">        name        TEXT            NOT NULL, </span>
+<span class="s2">        status      BOOLEAN         DEFAULT 0,</span>
+<span class="s2">        book        VARCHAR(30)     DEFAULT Genesis, </span>
+<span class="s2">        chapter     TINYINT         DEFAULT 1, </span>
+<span class="s2">        language    TEXT            DEFAULT English,</span>
+<span class="s2">        b_version   TEXT            DEFAULT akjv,</span>
+<span class="s2">        mod_book    BOOLEAN         DEFAULT 0,</span>
+<span class="s2">        mod_chapter BOOLEAN         DEFAULT 0, </span>
+<span class="s2">    mod_language    BOOLEAN         DEFAULT 0,</span>
+<span class="s2">    mod_b_version   BOOLEAN         DEFAULT 0,</span>
+<span class="s2">        verse       BOOLEAN         DEFAULT 0</span>
+<span class="s2">        );</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql_command</span><span class="p">)</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span></div>
+
+
+<div class="viewcode-block" id="add_user"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.add_user">[docs]</a><span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Add a new user in the database</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection: Database connection</span>
+<span class="sd">        cursor: Database cursor</span>
+<span class="sd">        user_id (int): ID in telegram for the user chat</span>
+<span class="sd">        name (str): Name of the user</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;INSERT INTO users(id, name) VALUES(?,?);&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error in the query - the user already exists&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_subscribed_user"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_subscribed_user">[docs]</a><span class="k">def</span> <span class="nf">get_subscribed_user</span><span class="p">(</span><span class="n">cursor</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get the id list of the subscribed users</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cursor: Database cursor</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        List of subscribed users IDs</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT id FROM users WHERE status = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="set_language"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_language">[docs]</a><span class="k">def</span> <span class="nf">set_language</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">lang</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Set a language for a given user</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection: Database connection</span>
+<span class="sd">        cursor: Database cursor</span>
+<span class="sd">        language (str): Name of the desired user language</span>
+<span class="sd">        user_id (int): ID of the user</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;UPDATE users SET language = ? where id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">lang</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_language"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_language">[docs]</a><span class="k">def</span> <span class="nf">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Get the language of a given user</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cursor: Database cursor</span>
+<span class="sd">        user_id (int): ID of the user</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        Language of the user</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT language FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+        <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;English&quot;</span></div>
+
+<span class="c1"># modificate the language modificator value (mod_language) in the db</span>
+<div class="viewcode-block" id="set_mod_language"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_mod_language">[docs]</a><span class="k">def</span> <span class="nf">set_mod_language</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="n">get_mod_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)))</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;UPDATE users SET mod_language = ? where id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_mod_language"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_mod_language">[docs]</a><span class="k">def</span> <span class="nf">get_mod_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the mod_language for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT mod_language FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="set_status"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_status">[docs]</a><span class="k">def</span> <span class="nf">set_status</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># save the subscription status in the db</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;UPDATE users SET status = ? where id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_status"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_status">[docs]</a><span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the registry/subscription status for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT status FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+        <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="set_book"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_book">[docs]</a><span class="k">def</span> <span class="nf">set_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">book</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># save the book in the db</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET book = ? where id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_book"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_book">[docs]</a><span class="k">def</span> <span class="nf">get_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the book for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT book FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1"># modificate the book modificator value (mod_book) in the db</span>
+<div class="viewcode-block" id="set_mod_book"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_mod_book">[docs]</a><span class="k">def</span> <span class="nf">set_mod_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET mod_book = ? where id = ?;&quot;</span><span class="p">,</span>
+                       <span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">get_mod_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))),</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_mod_book"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_mod_book">[docs]</a><span class="k">def</span> <span class="nf">get_mod_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the mod_book for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT mod_book FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="set_chapter"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_chapter">[docs]</a><span class="k">def</span> <span class="nf">set_chapter</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">chapter</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># save the chapter number in the db</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;UPDATE users SET chapter = ? where id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">chapter</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_chapter"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_chapter">[docs]</a><span class="k">def</span> <span class="nf">get_chapter</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the chapter for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT chapter FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1"># modificate the chapter modificator value (mod_chapter) in the db</span>
+<div class="viewcode-block" id="set_mod_chapter"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_mod_chapter">[docs]</a><span class="k">def</span> <span class="nf">set_mod_chapter</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET mod_chapter = ? where id = ?;&quot;</span><span class="p">,</span>
+                       <span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">get_mod_chapter</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))),</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_mod_chapter"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_mod_chapter">[docs]</a><span class="k">def</span> <span class="nf">get_mod_chapter</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the chapter for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT mod_chapter FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="set_bible_version"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_bible_version">[docs]</a><span class="k">def</span> <span class="nf">set_bible_version</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># save the version to read</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="s2">&quot;UPDATE users SET b_version = ? where id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_bible_version"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_bible_version">[docs]</a><span class="k">def</span> <span class="nf">get_bible_version</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the bible version for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT b_version FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1"># modificate the bible_version modificator value (mod_b_version) in the db</span>
+<div class="viewcode-block" id="set_mod_bible_version"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_mod_bible_version">[docs]</a><span class="k">def</span> <span class="nf">set_mod_bible_version</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET mod_b_version = ? where id = ?;&quot;</span><span class="p">,</span>
+                       <span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">get_mod_bible_version</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))),</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_mod_bible_version"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_mod_bible_version">[docs]</a><span class="k">def</span> <span class="nf">get_mod_bible_version</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the mod bible_version for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT mod_b_version FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1"># modificate the verse modificator value (verse) in the db</span>
+<div class="viewcode-block" id="set_verse"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_verse">[docs]</a><span class="k">def</span> <span class="nf">set_verse</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;UPDATE users SET verse = ? where id = ?;&quot;</span><span class="p">,</span>
+                       <span class="p">(</span><span class="ow">not</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">get_verse</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))),</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_verse"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.get_verse">[docs]</a><span class="k">def</span> <span class="nf">get_verse</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>  <span class="c1"># get the mod verse for the id</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT verse FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="set_mod_default"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.set_mod_default">[docs]</a><span class="k">def</span> <span class="nf">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        TODO: Add description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+            <span class="sd">&quot;&quot;&quot;UPDATE users</span>
+<span class="sd">                    SET mod_book  = ?,  mod_chapter = ?, mod_language = ?, mod_b_version = ?</span>
+<span class="sd">                    WHERE id = ?;&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">connection</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error - verify the entry&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="verify_id"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.verify_id">[docs]</a><span class="k">def</span> <span class="nf">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Verify if an user exists</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM users WHERE id = ?;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">user_id</span><span class="p">,))</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">exist</span></div>
+
+
+<div class="viewcode-block" id="read_db"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.read_db">[docs]</a><span class="k">def</span> <span class="nf">read_db</span><span class="p">(</span><span class="n">cursor</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Read all the database</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM users;&quot;</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="close_db"><a class="viewcode-back" href="../../../src.utils.html#src.utils.database_control.close_db">[docs]</a><span class="k">def</span> <span class="nf">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Close the database connection</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">connection</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Camilo Caceres F.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

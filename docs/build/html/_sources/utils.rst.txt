@@ -1,0 +1,45 @@
+utils package
+=============
+
+Submodules
+----------
+
+utils.bible module
+------------------
+
+.. automodule:: utils.bible
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.constants module
+----------------------
+
+.. automodule:: utils.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.database\_control module
+------------------------------
+
+.. automodule:: utils.database_control
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+utils.queries module
+--------------------
+
+.. automodule:: utils.queries
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

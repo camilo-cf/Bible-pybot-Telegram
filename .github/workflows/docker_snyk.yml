@@ -1,5 +1,6 @@
 name: Docker Snyk
-on: push
+on: [push, workflow_dispatch]
+
 jobs:
   snyk-ubuntu:
     runs-on: ubuntu-latest

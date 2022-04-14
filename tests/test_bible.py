@@ -3,13 +3,13 @@
 """
 import unittest
 import random
-import string
-
 import sys
+import string
 
 sys.path.append("./src/")
 import utils.constants as K
 from utils import bible
+
 
 class TestBible(unittest.TestCase):
     def test_similar(self):
@@ -24,14 +24,15 @@ class TestBible(unittest.TestCase):
             word_list = list(word)
             # Changes 2 random letters in the book name
             for _ in range(1):
-                word_list[random.randint(0, len(word_list) - 1)] = random.choice(
-                    string.ascii_lowercase
-                )
+                word_list[
+                    random.randint(0, len(word_list) - 1)
+                ] = random.choice(string.ascii_lowercase)
             word = "".join(word_list)
             if each not in [
                 "1Kings",
                 "2Kings",
                 "Job",
+                "Joel",
                 "1Peter",
                 "2Peter",
                 "3Peter",
@@ -40,11 +41,19 @@ class TestBible(unittest.TestCase):
                 "John",
                 "1John",
                 "2John",
+                "3John",
                 "Acts",
                 "Amos",
                 "1Samuel",
                 "2Samuel",
-                "Chronicles",
+                "1Chronicles",
+                "2Chronicles",
+                "1Timothy",
+                "2Timothy",
+                "1Thessalonians",
+                "2Thessalonians",
+                "Jude",
+                "Judges",
             ]:
                 self.assertEqual(bible.verify_book(word, K.BOOKS), each)
 

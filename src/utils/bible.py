@@ -25,8 +25,9 @@ JSON_API_URL_2PART = constants.JSON_API_URL_2PART
 # Constructor of the translator
 translator = Translator()
 
+
 def similar(string_1, string_2):
-    '''
+    """
     Compares to strings and verify their similarity ratio
 
     Args:
@@ -35,12 +36,12 @@ def similar(string_1, string_2):
 
     Return:
         similarity ratio (float betweenn 0.0 - 1.0)
-    '''
+    """
     return SequenceMatcher(None, string_1, string_2).ratio()
 
 
 def verify_book(book, books=Books):
-    '''
+    """
     Verify and Identify the book (input) according to the Books list,
     returns the most similar book name.
 
@@ -50,15 +51,13 @@ def verify_book(book, books=Books):
 
     Return:
         The most similar book to the input in the list (str)
-    '''
-    similarity_vec = []
-    for each in books:
-        similarity_vec.append(similar(book, each))
+    """
+    similarity_vec = [similar(book, each) for each in books]
     return books[np.argmax(similarity_vec)]
 
 
-def verify_book_chapter(book, chapter, bible_version='akjv'):
-    '''
+def verify_book_chapter(book, chapter, bible_version="akjv"):
+    """
     Verify the if the given chapter of a given book exists.
 
     Args:
@@ -68,11 +67,16 @@ def verify_book_chapter(book, chapter, bible_version='akjv'):
 
     Return:
         boolean telling if the chapter exists (True) or no (False)
-    '''
+    """
 
     try:
         requesting = requests.get(
-            JSON_API_URL+str(book)+str(chapter)+JSON_API_URL_2PART+bible_version)
+            JSON_API_URL
+            + str(book)
+            + str(chapter)
+            + JSON_API_URL_2PART
+            + bible_version
+        )
         text = requesting.text[1:-2]
         json.loads(text)  # Only to check if is something there
         return True
@@ -81,8 +85,8 @@ def verify_book_chapter(book, chapter, bible_version='akjv'):
         return False
 
 
-def get_chapter(book, chapter, bible_version='akjv'):
-    '''
+def get_chapter(book, chapter, bible_version="akjv"):
+    """
     Gey the Bible chapter
 
     Args:
@@ -92,14 +96,19 @@ def get_chapter(book, chapter, bible_version='akjv'):
 
     Return:
         The message of the bible in the given book and chapter (str) [it can be long]
-    '''
+    """
     requesting = requests.get(
-        JSON_API_URL+str(book)+str(chapter)+JSON_API_URL_2PART+bible_version)
+        JSON_API_URL
+        + str(book)
+        + str(chapter)
+        + JSON_API_URL_2PART
+        + bible_version
+    )
     return requesting.text[1:-2]
 
 
-def get_message(message, bible_version='akjv'):
-    '''
+def get_message(message, bible_version="akjv"):
+    """
     Get the passage of the Bible given an income message.
 
     Args:
@@ -109,14 +118,16 @@ def get_message(message, bible_version='akjv'):
 
     Return:
         The message of the bible in the given book and chapter (str) [it can be long].
-    '''
+    """
     book = verify_book(message)
     details = message.split(" ")[-1]
     message = " ".join([book, details])
 
     if message[-1].isnumeric():
         requesting = requests.get(
-            JSON_API_URL+str(message)+JSON_API_URL_2PART+bible_version)
+            JSON_API_URL + message + JSON_API_URL_2PART + bible_version
+        )
+
         text = requesting.text[1:-2]
         jsontxt = json.loads(text)
 
@@ -125,19 +136,19 @@ def get_message(message, bible_version='akjv'):
             full_verses = [
                 str(each_verse)
                 + " "
-                + jsontxt['book'][0]['chapter'][each_verse]['verse']
+                + jsontxt["book"][0]["chapter"][each_verse]["verse"]
                 for each_verse in verses
             ]
 
         except Exception as exception:
             print(exception)
-            verses = list(jsontxt['chapter'].keys())
+            verses = list(jsontxt["chapter"].keys())
             full_verses = [
-                str(each_verse) + ' ' + jsontxt['chapter'][each_verse]['verse']
+                f"{str(each_verse)} " + jsontxt["chapter"][each_verse]["verse"]
                 for each_verse in verses
             ]
 
-        if text == 'U':
+        if text == "U":
             full_verses = "Error - Passage not found"
     else:
         full_verses = "Verify the chapter of the passage"
@@ -145,8 +156,8 @@ def get_message(message, bible_version='akjv'):
     return "".join(full_verses)
 
 
-def translate_message(text, language="English", src='auto'):
-    '''
+def translate_message(text, language="English", src="auto"):
+    """
     Translates a text from an automatic source language to English
 
     Args:
@@ -156,12 +167,12 @@ def translate_message(text, language="English", src='auto'):
 
     Return:
         Translated text into the goal language
-    '''
+    """
     return translator.translate(text, dest=language, src=src).text
 
 
-def get_next_chapter(present_chapter, bible_version='akjv'):
-    '''
+def get_next_chapter(present_chapter, bible_version="akjv"):
+    """
     Returns the next chapter in a given book and chapter
 
     Args:
@@ -175,29 +186,30 @@ def get_next_chapter(present_chapter, bible_version='akjv'):
         get_next_chapter('John 1')
         > John 2
 
-    '''
+    """
     book = verify_book(present_chapter)
     chapter = present_chapter.split(" ")[-1]
     present_chapter = " ".join([book, chapter])
 
     try:
-        new_chapter = int(chapter)+1
+        new_chapter = int(chapter) + 1
         next_chapter = " ".join([book, str(new_chapter)])
         requesting = requests.get(
-            JSON_API_URL+str(next_chapter)+JSON_API_URL_2PART+bible_version)
+            JSON_API_URL + next_chapter + JSON_API_URL_2PART + bible_version
+        )
+
         text = requesting.text[1:-2]
 
-        if text == 'U':
+        if text == "U":
             number_book = Dict_books[book]
-            new_book = Books[number_book+1-1]
+            new_book = Books[number_book + 1 - 1]
             new_chapter = 1
             next_chapter = " ".join([new_book, str(new_chapter)])
 
-    except (Exception) as exception:
+    except Exception as exception:
         print(exception)
-        number_book = 0  # starting over again
-        new_book = Books[number_book+1-1]
+        number_book = 0
+        new_book = Books[number_book + 1 - 1]
         new_chapter = 1
         next_chapter = " ".join([new_book, str(new_chapter)])
-
     return next_chapter

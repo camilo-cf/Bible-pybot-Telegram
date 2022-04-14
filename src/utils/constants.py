@@ -169,7 +169,7 @@ with open(
     os.path.join(os.getcwd(), "src/utils/", "languages_api.txt"), "r"
 ) as f:
     bible_api_list = [x[4:] for x in f]
-dict_api_version = {}
+dict_api_version: dict = {}
 languages_api = []
 
 for each_language in bible_api_list:

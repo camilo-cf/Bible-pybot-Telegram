@@ -42,7 +42,7 @@ class UsersDB:
         except Exception:
             print(f"Error: {Exception}")
 
-    def fetch_query(self, query: str) -> str:
+    def fetch_query(self, query: str) -> list:
         """Fetches the result of a query in the database.
 
         Args:

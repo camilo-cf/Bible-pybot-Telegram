@@ -3,7 +3,6 @@
 """
 import sqlite3
 import sys
-from typing import Any, Tuple
 
 sys.path.append("./src/")
 import utils.queries as Q

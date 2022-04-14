@@ -1,3 +1,5 @@
+"""File with all the SQL queries
+"""
 CREATE_TABLE = """
         CREATE TABLE IF NOT EXISTS users ( 
             id          INTEGER         PRIMARY KEY     NOT NULL, 

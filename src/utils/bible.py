@@ -115,8 +115,7 @@ def get_next_chapter(present_chapter: str, bible_version: str = "akjv"):
     present_chapter = " ".join([book, chapter])
 
     try:
-        new_chapter = int(chapter) + 1
-        next_chapter = " ".join([book, str(new_chapter)])
+        next_chapter = " ".join([book, str(int(chapter) + 1)])
         requesting = requests.get(
             JSON_API_URL + next_chapter + JSON_API_URL_2PART + bible_version
         )

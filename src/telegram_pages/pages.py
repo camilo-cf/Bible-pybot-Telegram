@@ -182,7 +182,6 @@ class TelegramPages:
             language,
             "English",
         )
-            
 
     def help(
         self,
@@ -248,9 +247,7 @@ class TelegramPages:
                 + K.START_FN
             )
 
-        return validations.translate_message(
-            K.LANG_MSG, language, "English"
-        )            
+        return validations.translate_message(K.LANG_MSG, language, "English")
 
     def book(
         self,
@@ -269,7 +266,16 @@ class TelegramPages:
         language = self.db.fetch_query(Q.GET_LANGUAGE.format(user_id))[0][0]
         exist = len(self.db.fetch_query(Q.VERIFY_ID.format(user_id))) != 0
 
-        return validations.translate_message(K.BOOK_MSG, language, "English") if exist else (validations.translate_message(K.NEW_USR_ERROR, language, "English") + K.START_FN)
+        return (
+            validations.translate_message(K.BOOK_MSG, language, "English")
+            if exist
+            else (
+                validations.translate_message(
+                    K.NEW_USR_ERROR, language, "English"
+                )
+                + K.START_FN
+            )
+        )
 
     def chapter(
         self,
@@ -379,22 +385,18 @@ class TelegramPages:
             == "True"
         )
         bible_book_selection = (
-            self.db.fetch_query(Q.GET_MOD_BOOK.format(user_id))[0][0]
-            == "True"
+            self.db.fetch_query(Q.GET_MOD_BOOK.format(user_id))[0][0] == "True"
         )
         chapter_selection = (
             self.db.fetch_query(Q.GET_MOD_CHAPTER.format(user_id))[0][0]
             == "True"
         )
         bible_version_selection = (
-            self.db.fetch_query(Q.GET_MOD_BIBLE_VERSION.format(user_id))[
-                0
-            ][0]
+            self.db.fetch_query(Q.GET_MOD_BIBLE_VERSION.format(user_id))[0][0]
             == "True"
         )
         send_verse = (
-            self.db.fetch_query(Q.GET_VERSE.format(user_id))[0][0]
-            == "True"
+            self.db.fetch_query(Q.GET_VERSE.format(user_id))[0][0] == "True"
         )
 
         if lang_selection:
@@ -409,9 +411,7 @@ class TelegramPages:
             return [self.set_chapter_selection(user_id, income_text)]
         self.db.execute_query(Q.SET_MOD_DEFAULT.format(user_id))
         return [
-            validations.translate_message(
-                K.NO_UNDERSTAND, language, "English"
-            )
+            validations.translate_message(K.NO_UNDERSTAND, language, "English")
             + "'/help'"
         ]
 

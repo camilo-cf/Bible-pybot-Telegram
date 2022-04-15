@@ -13,6 +13,7 @@ Welcome to Bible-pybot-Telegram's documentation!
    modules
    src
    src.utils
+   src.telegram_pages
    
 
 Indices and tables

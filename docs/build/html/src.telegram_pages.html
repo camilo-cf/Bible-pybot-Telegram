@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.telegram_pages package &mdash; Bible-pybot-Telegram  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Bible-pybot-Telegram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.html">src package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.utils.html">src.utils package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Bible-pybot-Telegram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>src.telegram_pages package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/src.telegram_pages.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="src-telegram-pages-package">
+<h1>src.telegram_pages package<a class="headerlink" href="#src-telegram-pages-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-src.telegram_pages.pages">
+<span id="src-telegram-pages-pages-module"></span><h2>src.telegram_pages.pages module<a class="headerlink" href="#module-src.telegram_pages.pages" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.telegram_pages.pages.</span></span><span class="sig-name descname"><span class="pre">TelegramPages</span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to interface all the bot behavior</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.bible_version">
+<span class="sig-name descname"><span class="pre">bible_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.bible_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.bible_version" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the change of Bible’s version</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A str message requesting for the new book’s chapter number
+The available versions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>A tuple with</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.book">
+<span class="sig-name descname"><span class="pre">book</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.book"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.book" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the change of Bible’s book</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A str message requesting for the new book</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.chapter">
+<span class="sig-name descname"><span class="pre">chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.chapter" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the change of Bible’s Book chapter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A str message requesting for the new book’s chapter number</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.default">
+<span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">income_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.default" title="Permalink to this definition"></a></dt>
+<dd><p>Main function to interact with default text.</p>
+<dl class="simple">
+<dt>This function can handle the SET of:</dt><dd><ul class="simple">
+<li><p>Language selection</p></li>
+<li><p>Bible book selection</p></li>
+<li><p>Bible version selection</p></li>
+<li><p>Chapter selection</p></li>
+<li><p>Send a desired verse</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p></li>
+<li><p><strong>income_text</strong> (<em>str</em>) – A str with the user’s message to be processed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of strings with the required information</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.help">
+<span class="sig-name descname"><span class="pre">help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.help" title="Permalink to this definition"></a></dt>
+<dd><p>Send the bot’s help</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A str wit the help message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.information">
+<span class="sig-name descname"><span class="pre">information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.information" title="Permalink to this definition"></a></dt>
+<dd><p>Send user’s information</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A str with the user information</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.language">
+<span class="sig-name descname"><span class="pre">language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.language"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.language" title="Permalink to this definition"></a></dt>
+<dd><p>Starts the change of language</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A str message requesting for the new language</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.return_verse">
+<span class="sig-name descname"><span class="pre">return_verse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">income_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.return_verse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.return_verse" title="Permalink to this definition"></a></dt>
+<dd><p>Return the desired verse</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p></li>
+<li><p><strong>income_text</strong> (<em>str</em>) – A str with the user’s message to be processed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of strings with the required information</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.send_chapter">
+<span class="sig-name descname"><span class="pre">send_chapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.send_chapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.send_chapter" title="Permalink to this definition"></a></dt>
+<dd><p>Send chapter functionality</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of strings with the next chapter</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.set_bible_book">
+<span class="sig-name descname"><span class="pre">set_bible_book</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">income_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.set_bible_book"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.set_bible_book" title="Permalink to this definition"></a></dt>
+<dd><p>Set the desired Bible book</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p></li>
+<li><p><strong>income_text</strong> (<em>str</em>) – A str with the user’s message to be processed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string with the confirmation message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.set_bible_version">
+<span class="sig-name descname"><span class="pre">set_bible_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">income_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.set_bible_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.set_bible_version" title="Permalink to this definition"></a></dt>
+<dd><p>Set the Bible’s version</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p></li>
+<li><p><strong>income_text</strong> (<em>str</em>) – A str with the user’s message to be processed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string with the confirmation message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.set_chapter_selection">
+<span class="sig-name descname"><span class="pre">set_chapter_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">income_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.set_chapter_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.set_chapter_selection" title="Permalink to this definition"></a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p></li>
+<li><p><strong>income_text</strong> (<em>str</em>) – A str with the user’s message to be processed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string with the confirmation message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.set_language">
+<span class="sig-name descname"><span class="pre">set_language</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">income_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.set_language"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.set_language" title="Permalink to this definition"></a></dt>
+<dd><p>Set the desired language</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p></li>
+<li><p><strong>income_text</strong> (<em>str</em>) – A str with the user’s message to be processed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of strings with the selection language message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.start" title="Permalink to this definition"></a></dt>
+<dd><p>Bot’s start message</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p></li>
+<li><p><strong>user_name</strong> (<em>str</em>) – Name of the user</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A string with a message</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.telegram_pages.pages.TelegramPages.verse">
+<span class="sig-name descname"><span class="pre">verse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/src/telegram_pages/pages.html#TelegramPages.verse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.telegram_pages.pages.TelegramPages.verse" title="Permalink to this definition"></a></dt>
+<dd><p>Start the verse process</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>user_id</strong> (<em>str</em>) – ID of the user the bot is interacting with</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A str message requesting the verse to be sent</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-src.telegram_pages">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-src.telegram_pages" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Camilo Caceres F.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

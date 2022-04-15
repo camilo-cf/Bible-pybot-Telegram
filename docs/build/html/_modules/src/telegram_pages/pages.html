@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.telegram_pages.pages &mdash; Bible-pybot-Telegram  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Bible-pybot-Telegram
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">src</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../src.html">src package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../src.utils.html">src.utils package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Bible-pybot-Telegram</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>src.telegram_pages.pages</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.telegram_pages.pages</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">email</span> <span class="kn">import</span> <span class="n">message</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">log</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">telebot.util</span> <span class="kn">import</span> <span class="n">split_string</span> <span class="k">as</span> <span class="n">split_string</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;./src/&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">bible</span> <span class="k">as</span> <span class="n">Bible</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">queries</span> <span class="k">as</span> <span class="n">Q</span>
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">database_control</span> <span class="k">as</span> <span class="n">Database_control</span>
+<span class="kn">import</span> <span class="nn">utils.validations</span> <span class="k">as</span> <span class="nn">validations</span>
+
+
+<div class="viewcode-block" id="TelegramPages"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages">[docs]</a><span class="k">class</span> <span class="nc">TelegramPages</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class to interface all the bot behavior&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initializes the class and creates a connection on the default database location.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">UsersDB</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TelegramPages.start"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Bot&#39;s start message</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">            user_name (str):</span>
+<span class="sd">                Name of the user</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A string with a message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">ADD_USER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">user_name</span><span class="p">))</span>
+            <span class="n">language</span> <span class="o">=</span> <span class="s2">&quot;English&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span>
+                <span class="mi">0</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">START_MSG</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.send_chapter"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.send_chapter">[docs]</a>    <span class="k">def</span> <span class="nf">send_chapter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Send chapter functionality</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of strings with the next chapter</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">chapter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">bible_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span>
+            <span class="n">Q</span><span class="o">.</span><span class="n">GET_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="n">chapter2send</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">book</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">chapter</span><span class="p">)])</span>
+            <span class="n">chp_native</span> <span class="o">=</span> <span class="n">chapter2send</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">language</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">lang_ver_transl</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">dict_api_acr2ver</span><span class="p">[</span><span class="n">bible_version</span><span class="p">]</span>
+                    <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">dict_api_version</span><span class="p">[</span><span class="n">language</span><span class="p">]</span>
+                <span class="p">):</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">chapter2send</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">chapter2send</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                        <span class="n">chapter2send</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">language</span>
+                    <span class="p">)</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                        <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span>
+                            <span class="n">chapter2send</span><span class="p">,</span>
+                            <span class="n">bible_version</span><span class="p">,</span>
+                        <span class="p">),</span>
+                        <span class="n">language</span><span class="p">,</span>
+                        <span class="s2">&quot;English&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="ne">Exception</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">chp_native</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">chapter2send</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span>
+                <span class="n">split_string</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Update next chapter in the db</span>
+            <span class="n">next_chapter</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_next_chapter</span><span class="p">(</span><span class="n">chapter2send</span><span class="p">)</span>
+            <span class="n">next_book</span> <span class="o">=</span> <span class="n">next_chapter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">next_chapter</span> <span class="o">=</span> <span class="n">next_chapter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">next_book</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">next_chapter</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+            <span class="p">]</span>
+        <span class="k">return</span> <span class="n">message</span></div>
+
+<div class="viewcode-block" id="TelegramPages.verse"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.verse">[docs]</a>    <span class="k">def</span> <span class="nf">verse</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Start the verse process</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A str message requesting the verse to be sent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_VERSE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">single_mesage</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">single_mesage</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">VERSE_MSG</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="n">exist</span>
+            <span class="k">else</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+            <span class="p">)</span>
+            <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.information"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.information">[docs]</a>    <span class="k">def</span> <span class="nf">information</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Send user&#39;s information</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A str with the user information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">chapter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">bible_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span>
+            <span class="n">Q</span><span class="o">.</span><span class="n">GET_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+            <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">bible_version</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">dict_api_acr2ver</span><span class="p">[</span><span class="n">bible_version</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">bible_version</span> <span class="o">=</span> <span class="s2">&quot;akjv&quot;</span>
+
+        <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+            <span class="n">K</span><span class="o">.</span><span class="n">INFO_MSG</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">language</span><span class="p">,</span> <span class="n">book</span><span class="p">,</span> <span class="n">chapter</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">),</span>
+            <span class="n">language</span><span class="p">,</span>
+            <span class="s2">&quot;English&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.help"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.help">[docs]</a>    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Send the bot&#39;s help</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A str wit the help message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+            <span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">HELP_MSG</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">COMMANDS</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">+=</span> <span class="p">(</span>
+                <span class="s2">&quot;/&quot;</span>
+                <span class="o">+</span> <span class="n">key</span>
+                <span class="o">+</span> <span class="s2">&quot;: &quot;</span>
+                <span class="o">+</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">COMMANDS</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">message</span></div>
+
+<div class="viewcode-block" id="TelegramPages.language"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.language">[docs]</a>    <span class="k">def</span> <span class="nf">language</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Starts the change of language</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A str message requesting for the new language</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">LANG_MSG</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.book"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.book">[docs]</a>    <span class="k">def</span> <span class="nf">book</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Starts the change of Bible&#39;s book</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A str message requesting for the new book</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">BOOK_MSG</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exist</span>
+            <span class="k">else</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.chapter"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.chapter">[docs]</a>    <span class="k">def</span> <span class="nf">chapter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Starts the change of Bible&#39;s Book chapter</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A str message requesting for the new book&#39;s chapter number</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                <span class="n">K</span><span class="o">.</span><span class="n">CHAPTER_MSG</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.bible_version"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.bible_version">[docs]</a>    <span class="k">def</span> <span class="nf">bible_version</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Starts the change of Bible&#39;s version</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A tuple with:</span>
+<span class="sd">                A str message requesting for the new book&#39;s chapter number</span>
+<span class="sd">                The available versions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span><span class="p">,</span>
+                <span class="p">[],</span>
+            <span class="p">)</span>
+        <span class="n">versions</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">K</span><span class="o">.</span><span class="n">dict_api_version</span><span class="p">[</span><span class="n">language</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">dict_api_version</span><span class="p">[</span><span class="s2">&quot;English&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">language</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">dict_api_version</span>
+            <span class="k">else</span> <span class="n">K</span><span class="o">.</span><span class="n">dict_api_version</span><span class="p">[</span><span class="s2">&quot;English&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">CHAPTER_MSG</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span><span class="p">),</span>
+            <span class="n">versions</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.default"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.default">[docs]</a>    <span class="k">def</span> <span class="nf">default</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">income_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Main function to interact with default text.</span>
+
+<span class="sd">        This function can handle the SET of:</span>
+<span class="sd">            - Language selection</span>
+<span class="sd">            - Bible book selection</span>
+<span class="sd">            - Bible version selection</span>
+<span class="sd">            - Chapter selection</span>
+<span class="sd">            - Send a desired verse</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">            income_text (str):</span>
+<span class="sd">                A str with the user&#39;s message to be processed</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of strings with the required information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exist</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">VERIFY_ID</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)))</span> <span class="o">!=</span> <span class="mi">0</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">NEW_USR_ERROR</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+                <span class="p">)</span>
+                <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">START_FN</span>
+            <span class="p">)</span>
+        <span class="n">lang_selection</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_MOD_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
+        <span class="p">)</span>
+        <span class="n">bible_book_selection</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_MOD_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
+        <span class="p">)</span>
+        <span class="n">chapter_selection</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_MOD_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
+        <span class="p">)</span>
+        <span class="n">bible_version_selection</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_MOD_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
+        <span class="p">)</span>
+        <span class="n">send_verse</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_VERSE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">lang_selection</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">set_language</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">income_text</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">send_verse</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_verse</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">income_text</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bible_book_selection</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">set_bible_book</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">income_text</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">bible_version_selection</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">set_bible_version</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">income_text</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">chapter_selection</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">set_chapter_selection</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">income_text</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">NO_UNDERSTAND</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span><span class="p">)</span>
+            <span class="o">+</span> <span class="s2">&quot;&#39;/help&#39;&quot;</span>
+        <span class="p">]</span></div>
+
+<div class="viewcode-block" id="TelegramPages.set_language"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.set_language">[docs]</a>    <span class="k">def</span> <span class="nf">set_language</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">income_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Set the desired language</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">            income_text (str):</span>
+<span class="sd">                A str with the user&#39;s message to be processed</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of strings with the selection language message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">language</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">verify_language</span><span class="p">(</span><span class="n">income_text</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">language</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">language</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">dict_api_version</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span>
+                <span class="n">Q</span><span class="o">.</span><span class="n">SET_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">dict_api_ver2acr</span><span class="p">[</span><span class="n">K</span><span class="o">.</span><span class="n">dict_api_version</span><span class="p">[</span><span class="n">language</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span>
+                    <span class="n">user_id</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;akjv&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+            <span class="n">K</span><span class="o">.</span><span class="n">SELECTED_LANG</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">language</span><span class="p">),</span> <span class="n">language</span><span class="p">,</span> <span class="s2">&quot;English&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.return_verse"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.return_verse">[docs]</a>    <span class="k">def</span> <span class="nf">return_verse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">income_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the desired verse</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">            income_text (str):</span>
+<span class="sd">                A str with the user&#39;s message to be processed</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of strings with the required information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">original_income</span> <span class="o">=</span> <span class="n">income_text</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">origin_language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span>
+                <span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">bible_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span>
+                <span class="n">Q</span><span class="o">.</span><span class="n">GET_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+            <span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">origin_language</span> <span class="ow">in</span> <span class="n">K</span><span class="o">.</span><span class="n">lang_ver_transl</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">origin_language</span> <span class="o">!=</span> <span class="s2">&quot;English&quot;</span><span class="p">:</span>
+                    <span class="n">income_text</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                        <span class="n">income_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">income_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+                    <span class="n">income_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">income_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">income_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)),</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">original_income</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">income_text</span><span class="si">}</span><span class="s2">) </span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="o">+</span> <span class="p">(</span><span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">income_text</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">income_text</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">income_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">income_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
+                    <span class="n">income_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">income_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                            <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">income_text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)),</span>
+                        <span class="p">]</span>
+                    <span class="p">)</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">original_income</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">income_text</span><span class="si">}</span><span class="s2">) </span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="o">+</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                        <span class="n">validations</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">income_text</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">),</span>
+                        <span class="n">origin_language</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_VERSE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">split_string</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="mi">3000</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TelegramPages.set_bible_book"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.set_bible_book">[docs]</a>    <span class="k">def</span> <span class="nf">set_bible_book</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">income_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Set the desired Bible book</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">            income_text (str):</span>
+<span class="sd">                A str with the user&#39;s message to be processed</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A string with the confirmation message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">origin_language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span>
+            <span class="mi">0</span>
+        <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">origin_language</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">lang_ver_transl</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">lang_transl</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">origin_language</span> <span class="o">!=</span> <span class="s2">&quot;English&quot;</span><span class="p">:</span>
+                <span class="n">income_text</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">income_text</span><span class="si">}</span><span class="s2"> 1.&quot;</span><span class="p">,</span>
+                    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span>
+                    <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span><span class="p">,</span>
+                <span class="p">)[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">book</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">verify_book</span><span class="p">(</span><span class="n">income_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                <span class="n">K</span><span class="o">.</span><span class="n">SELECT_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">book</span><span class="p">),</span> <span class="n">origin_language</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                <span class="n">K</span><span class="o">.</span><span class="n">ERROR_SELECT_BOOK</span><span class="p">,</span> <span class="n">origin_language</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.set_bible_version"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.set_bible_version">[docs]</a>    <span class="k">def</span> <span class="nf">set_bible_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">income_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Set the Bible&#39;s version</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">            income_text (str):</span>
+<span class="sd">                A str with the user&#39;s message to be processed</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A string with the confirmation message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">origin_language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span>
+            <span class="mi">0</span>
+        <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">verify_version</span><span class="p">(</span><span class="n">income_text</span><span class="p">)</span>
+        <span class="n">version_key</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">dict_api_ver2acr</span><span class="p">[</span>
+            <span class="n">validations</span><span class="o">.</span><span class="n">verify_version</span><span class="p">(</span><span class="n">income_text</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_BIBLE_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version_key</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+            <span class="n">K</span><span class="o">.</span><span class="n">SELECT_VERSION</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">version</span><span class="p">),</span> <span class="n">origin_language</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TelegramPages.set_chapter_selection"><a class="viewcode-back" href="../../../src.telegram_pages.html#src.telegram_pages.pages.TelegramPages.set_chapter_selection">[docs]</a>    <span class="k">def</span> <span class="nf">set_chapter_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">income_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (str):</span>
+<span class="sd">                ID of the user the bot is interacting with</span>
+
+<span class="sd">            income_text (str):</span>
+<span class="sd">                A str with the user&#39;s message to be processed</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A string with the confirmation message</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">origin_language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">fetch_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">GET_LANGUAGE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))[</span>
+            <span class="mi">0</span>
+        <span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">income_text</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">validations</span><span class="o">.</span><span class="n">verify_book_chapter</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">income_text</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span>
+            <span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">income_text</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span>
+                    <span class="n">Q</span><span class="o">.</span><span class="n">SET_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">income_text</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">return_msg</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">SELECT_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">income_text</span><span class="p">),</span> <span class="n">origin_language</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">income_text</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span>
+                    <span class="n">Q</span><span class="o">.</span><span class="n">SET_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">income_text</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">return_msg</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                    <span class="n">K</span><span class="o">.</span><span class="n">SELECT_CHAPTER_ERROR</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">book</span><span class="p">),</span> <span class="n">origin_language</span>
+                <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">income_text</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_CHAPTER</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">income_text</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+            <span class="n">return_msg</span> <span class="o">=</span> <span class="n">validations</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
+                <span class="n">K</span><span class="o">.</span><span class="n">SELECT_CHAPTER_ERROR_NAN</span><span class="p">,</span> <span class="n">origin_language</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_BOOK</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">user_id</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">Q</span><span class="o">.</span><span class="n">SET_MOD_DEFAULT</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">return_msg</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Camilo Caceres F.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

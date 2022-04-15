@@ -496,7 +496,7 @@ class TelegramPages:
                     )
                 response = (
                     f"{original_income} ({income_text}) \n"
-                    + Bible.get_message(income_text, bible_version)
+                    + (Bible.get_message(income_text, bible_version))[0]
                 )
 
             else:

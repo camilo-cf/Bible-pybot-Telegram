@@ -15,7 +15,7 @@ class TestBible(unittest.TestCase):
         self.assertNotEqual(bible.get_chapter("Genesis", 1), None)
 
     def test_get_message(self):
-        GEN_1_1 = "1 In the beginning God created the heaven and the earth.\r\n"
+        GEN_1_1 = ["1 In the beginning God created the heaven and the earth.\r\n"]
         self.assertEqual(
             bible.get_message("Genesis 1:1."),
             GEN_1_1,
@@ -25,15 +25,15 @@ class TestBible(unittest.TestCase):
             GEN_1_1,
         )
         self.assertTrue(
-            GEN_1_1 in bible.get_message("Genesis 1")
+            GEN_1_1[0] in bible.get_message("Genesis 1")[0]
             )
         self.assertEqual(
             bible.get_message("Genesis 100:100"),
-            "Error",
+            ["Error"],
         )
         self.assertEqual(
             bible.get_message("Genesis"),
-            "Error - Verify the chapter of the passage",
+            ["Error - Verify the chapter of the passage"],
         )
 
     def test_next_chapter(self):

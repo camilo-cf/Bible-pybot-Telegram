@@ -14,37 +14,40 @@ on:
     paths:
       - '!*.MD'
   workflow_dispatch:
+  
 jobs:
-  test:
-    strategy:
-      matrix:
-        platform: [ ubuntu-latest, macOS-latest ]
-        node: [ '12', '10' ]
-    name: test/node ${{ matrix.node }}/${{ matrix.platform }}
-    runs-on: ${{ matrix.platform }}
-    steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@master
-      with:
-        node-version: ${{ matrix.node }}
-    - run: npm install -g yarn
-    - run: yarn install
-    - run: yarn build
-    - run: yarn test
-  coverage:
-    needs: [ test ]
-    name: coverage
+  all:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-node@master
-      with:
-        node-version: '12'
-    - run: npm install -g yarn
-    - run: yarn install
-    - run: yarn build
-    - uses: paambaati/codeclimate-action@v2.2.4
+    - name: checkout code
+      uses: actions/checkout@v2
+
+    - name: install dependencies
+      run: npm ci
+
+    - name: build typescript
+      run: npm run build
+
+    - name: run tests and instrument coverage
+      run: npm run coverage
+
+    - name: check for unformatted sources
+      run: |
+        npm run format:check \
+        || (echo "##[error] found unformatted files. please 'npm run format'" \
+                 "and check in all changes" \
+            && exit 1)
+    - name: check for uncommitted changes
+      # Ensure no changes, but ignore node_modules dir since dev/fresh ci deps installed.
+      run: |
+        git diff --exit-code --stat -- . ':!node_modules' \
+        || (echo "##[error] found changed files after build. please 'npm run build'" \
+                 "and check in all changes" \
+            && exit 1)
+    - name: publish code coverage to code-climate (duh)
+      uses: paambaati/codeclimate-action@v2.7.5
       env:
         CC_TEST_REPORTER_ID: 73bf2c0e0b4194bbe42c139e0f5c8d433c737ef44aeee34c665d4c85bbd9b2e2
       with:
-        coverageCommand: yarn coverage
+        debug: true
+      if: ${{ github.event_name == 'push' }}

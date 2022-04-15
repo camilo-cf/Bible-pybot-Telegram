@@ -9,9 +9,6 @@ jobs:
         python-version: ["3.8"]
     steps:
     - uses: actions/checkout@v2
-    - name: Download and Verify CodeClimate reporter binaries
-      run: |
-        curl -L -O https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -21,8 +18,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install coverage
     
-    - name: Analyzing the code with coverage
+    - name: Download CodeClimate reporter binaries & Analyzing the code with coverage
       run: |
+        curl -L -O https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         ./cc-test-reporter before-build
         coverage run -m unittest discover
         coverage xml --omit='env/*,tests/*'

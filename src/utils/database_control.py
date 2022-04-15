@@ -17,7 +17,7 @@ class UsersDB:
         Args:
             db_path (str, optional): _description_. Defaults to "data/users.db".
         """
-        self.connection = sqlite3.connect(db_path)
+        self.connection = sqlite3.connect(db_path, check_same_thread=False)
         cursor = self.connection.cursor()
         cursor.execute(Q.CREATE_TABLE.replace("\n", ""))
         cursor.close()

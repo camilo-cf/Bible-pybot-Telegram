@@ -21,17 +21,17 @@ class TestDatabase(unittest.TestCase):
         }
 
         DB_NAME = "./test_db.db"
+        if os.path.exists(DB_NAME):
+            os.remove(DB_NAME)
         db = database_control.UsersDB(DB_NAME)
         db.execute_query(Q.ADD_USER.format(TEST_DATA["id"], TEST_DATA["name"]))
         db_return = db.fetch_query(Q.GET_USER.format(TEST_DATA["id"]))
-        self.assertTrue(type(db_return) == list)
         self.assertEqual(
             db_return,
             [
                 (
                     TEST_DATA["id"],
                     TEST_DATA["name"],
-                    0,
                     "Genesis",
                     1,
                     "English",

@@ -11,9 +11,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Download and Verify CodeClimate reporter binaries
       run: |
-        curl -L -O https://codeclimate.com/downloads/test-reporter/test-reporter-0.10.1-darwin-amd64
-        curl -L -O https://codeclimate.com/downloads/test-reporter/test-reporter-0.10.1-darwin-amd64.sha256
-        grep test-reporter-0.10.1-darwin-amd64  test-reporter-${VERSION}-darwin-amd64.sha256 | shasum -a 256 -c -      
+        curl -L -O https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -32,5 +30,3 @@ jobs:
         ./cc-test-reporter upload-coverage
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER }}
-
-

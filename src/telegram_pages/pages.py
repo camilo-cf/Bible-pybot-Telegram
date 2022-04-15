@@ -164,25 +164,25 @@ class TelegramPages:
         )[0][0]
         exist = len(self.db.fetch_query(Q.VERIFY_ID.format(user_id))) != 0
 
-        if exist:
-            try:
-                bible_version = K.dict_api_acr2ver[bible_version]
-            except Exception:
-                bible_version = "akjv"
-
-            return validations.translate_message(
-                K.INFO_MSG.format(language, book, chapter, bible_version),
-                language,
-                "English",
-            )
-
-        else:
+        if not exist:
             return (
                 validations.translate_message(
                     K.NEW_USR_ERROR, language, "English"
                 )
                 + K.START_FN
             )
+
+        try:
+            bible_version = K.dict_api_acr2ver[bible_version]
+        except Exception:
+            bible_version = "akjv"
+
+        return validations.translate_message(
+            K.INFO_MSG.format(language, book, chapter, bible_version),
+            language,
+            "English",
+        )
+            
 
     def help(
         self,
@@ -240,17 +240,17 @@ class TelegramPages:
         language = self.db.fetch_query(Q.GET_LANGUAGE.format(user_id))[0][0]
         exist = len(self.db.fetch_query(Q.VERIFY_ID.format(user_id))) != 0
 
-        if exist:
-            return validations.translate_message(
-                K.LANG_MSG, language, "English"
-            )
-        else:
+        if not exist:
             return (
                 validations.translate_message(
                     K.NEW_USR_ERROR, language, "English"
                 )
                 + K.START_FN
             )
+
+        return validations.translate_message(
+            K.LANG_MSG, language, "English"
+        )            
 
     def book(
         self,
@@ -269,17 +269,7 @@ class TelegramPages:
         language = self.db.fetch_query(Q.GET_LANGUAGE.format(user_id))[0][0]
         exist = len(self.db.fetch_query(Q.VERIFY_ID.format(user_id))) != 0
 
-        if exist:
-            return validations.translate_message(
-                K.BOOK_MSG, language, "English"
-            )
-        else:
-            return (
-                validations.translate_message(
-                    K.NEW_USR_ERROR, language, "English"
-                )
-                + K.START_FN
-            )
+        return validations.translate_message(K.BOOK_MSG, language, "English") if exist else (validations.translate_message(K.NEW_USR_ERROR, language, "English") + K.START_FN)
 
     def chapter(
         self,
@@ -377,55 +367,53 @@ class TelegramPages:
         """
         exist = len(self.db.fetch_query(Q.VERIFY_ID.format(user_id))) != 0
         language = self.db.fetch_query(Q.GET_LANGUAGE.format(user_id))[0][0]
-        if exist:
-            lang_selection = (
-                self.db.fetch_query(Q.GET_MOD_LANGUAGE.format(user_id))[0][0]
-                == "True"
-            )
-            bible_book_selection = (
-                self.db.fetch_query(Q.GET_MOD_BOOK.format(user_id))[0][0]
-                == "True"
-            )
-            chapter_selection = (
-                self.db.fetch_query(Q.GET_MOD_CHAPTER.format(user_id))[0][0]
-                == "True"
-            )
-            bible_version_selection = (
-                self.db.fetch_query(Q.GET_MOD_BIBLE_VERSION.format(user_id))[
-                    0
-                ][0]
-                == "True"
-            )
-            send_verse = (
-                self.db.fetch_query(Q.GET_VERSE.format(user_id))[0][0]
-                == "True"
-            )
-
-            if lang_selection:
-                return [self.set_language(user_id, income_text)]
-            elif send_verse:
-                return self.return_verse(user_id, income_text)
-            elif bible_book_selection:
-                return [self.set_bible_book(user_id, income_text)]
-            elif bible_version_selection:
-                return [self.set_bible_version(user_id, income_text)]
-            elif chapter_selection:
-                return [self.set_chapter_selection(user_id, income_text)]
-            else:
-                self.db.execute_query(Q.SET_MOD_DEFAULT.format(user_id))
-                return [
-                    validations.translate_message(
-                        K.NO_UNDERSTAND, language, "English"
-                    )
-                    + "'/help'"
-                ]
-        else:
+        if not exist:
             return (
                 validations.translate_message(
                     K.NEW_USR_ERROR, language, "English"
                 )
                 + K.START_FN
             )
+        lang_selection = (
+            self.db.fetch_query(Q.GET_MOD_LANGUAGE.format(user_id))[0][0]
+            == "True"
+        )
+        bible_book_selection = (
+            self.db.fetch_query(Q.GET_MOD_BOOK.format(user_id))[0][0]
+            == "True"
+        )
+        chapter_selection = (
+            self.db.fetch_query(Q.GET_MOD_CHAPTER.format(user_id))[0][0]
+            == "True"
+        )
+        bible_version_selection = (
+            self.db.fetch_query(Q.GET_MOD_BIBLE_VERSION.format(user_id))[
+                0
+            ][0]
+            == "True"
+        )
+        send_verse = (
+            self.db.fetch_query(Q.GET_VERSE.format(user_id))[0][0]
+            == "True"
+        )
+
+        if lang_selection:
+            return [self.set_language(user_id, income_text)]
+        if send_verse:
+            return self.return_verse(user_id, income_text)
+        if bible_book_selection:
+            return [self.set_bible_book(user_id, income_text)]
+        if bible_version_selection:
+            return [self.set_bible_version(user_id, income_text)]
+        if chapter_selection:
+            return [self.set_chapter_selection(user_id, income_text)]
+        self.db.execute_query(Q.SET_MOD_DEFAULT.format(user_id))
+        return [
+            validations.translate_message(
+                K.NO_UNDERSTAND, language, "English"
+            )
+            + "'/help'"
+        ]
 
     def set_language(self, user_id: str, income_text: str) -> str:
         """Set the desired language

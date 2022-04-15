@@ -39,7 +39,7 @@ def get_chapter(book: str, chapter: int, bible_version: str = "akjv"):
     return requesting.text[1:-2]
 
 
-def get_message(message: str, bible_version: str = "akjv"):
+def get_message(message: str, bible_version: str = "akjv") -> list:
     """Get the passage of the Bible given an income message.
 
     Args:
@@ -51,7 +51,7 @@ def get_message(message: str, bible_version: str = "akjv"):
             Version of the Bible.
 
     Return:
-        The message of the bible in the given book and chapter (str) [it can be long].
+        A list wit the message of the bible in the given book and chapter (list) [it can be long].
     """
     book = validations.verify_book(message)
     details = message.split(" ")[-1]
@@ -83,13 +83,13 @@ def get_message(message: str, bible_version: str = "akjv"):
                 ]
 
             if text == "U":
-                full_verses = "Error - Passage not found"
+                full_verses = ["Error - Passage not found"]
         except Exception:
-            full_verses = "Error"
+            full_verses = ["Error"]
     else:
-        full_verses = "Error - Verify the chapter of the passage"
+        full_verses = ["Error - Verify the chapter of the passage"]
 
-    return "".join(full_verses)
+    return ["".join(full_verses)]
 
 
 def get_next_chapter(present_chapter: str, bible_version: str = "akjv"):

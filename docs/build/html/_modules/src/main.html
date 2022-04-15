@@ -69,681 +69,225 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Main code for the Bible-bot with Telegram</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
 <span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">log</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
 
-<span class="kn">from</span> <span class="nn">googletrans</span> <span class="kn">import</span> <span class="n">Translator</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">telebot</span>
-<span class="kn">from</span> <span class="nn">telebot</span> <span class="kn">import</span> <span class="n">types</span>
+<span class="kn">import</span> <span class="nn">telebot.types</span> <span class="k">as</span> <span class="nn">types</span>
 
-<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">bible</span> <span class="k">as</span> <span class="n">Bible</span>
 <span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="n">database_control</span> <span class="k">as</span> <span class="n">Database_control</span>
+<span class="kn">from</span> <span class="nn">telegram_pages</span> <span class="kn">import</span> <span class="n">pages</span>
+
+<span class="n">bot</span> <span class="o">=</span> <span class="n">telebot</span><span class="o">.</span><span class="n">TeleBot</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">TOKEN</span><span class="p">)</span>
+<span class="n">tg_pages</span> <span class="o">=</span> <span class="n">pages</span><span class="o">.</span><span class="n">TelegramPages</span><span class="p">()</span>
 
 <span class="c1">########################################################################</span>
-<span class="c1">######################         Constants          ######################</span>
+<span class="c1">################          KEYBOARD FUNCTIONS         ###################</span>
 <span class="c1">########################################################################</span>
+<div class="viewcode-block" id="show_mainkeyboard"><a class="viewcode-back" href="../../src.html#src.main.show_mainkeyboard">[docs]</a><span class="k">def</span> <span class="nf">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show the main keyboard</span>
 
-<span class="c1"># Telegram TOKEN</span>
-<span class="n">TOKEN</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">TOKEN</span>
-
-<span class="c1"># command description used in the &quot;help&quot; command</span>
-<span class="n">commands</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span>
-
-<span class="c1">########################################################################</span>
-<span class="c1">######################         LANGUAGES          ######################</span>
-<span class="c1">########################################################################</span>
-
-<span class="c1"># Translator constructor</span>
-<span class="n">translator</span> <span class="o">=</span> <span class="n">Translator</span><span class="p">()</span>
-
-<span class="c1"># Available Languages and Versions in the API</span>
-<span class="n">dict_api_version</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">dict_api_version</span>
-<span class="n">dict_api_ver2acr</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">dict_api_ver2acr</span>
-<span class="n">dict_api_acr2ver</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">dict_api_acr2ver</span>
-<span class="n">unique_languages_api</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">unique_languages_api</span>
-
-<span class="c1"># Languages comparison</span>
-<span class="n">languages_translation_set</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">languages_translation_set</span>
-<span class="n">lang_ver_transl</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">lang_ver_transl</span>
-<span class="n">lang_transl</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">lang_transl</span>
-
-<span class="c1">########################################################################</span>
-<span class="c1">################         SUPPORT FUNCTIONS           ###################</span>
-<span class="c1">########################################################################</span>
-
-<span class="c1"># create a new Telegram Bot object</span>
-<span class="n">bot</span> <span class="o">=</span> <span class="n">telebot</span><span class="o">.</span><span class="n">TeleBot</span><span class="p">(</span><span class="n">TOKEN</span><span class="p">)</span>
-
-<div class="viewcode-block" id="verify_language"><a class="viewcode-back" href="../../src.html#src.main.verify_language">[docs]</a><span class="k">def</span> <span class="nf">verify_language</span><span class="p">(</span><span class="n">language_input</span><span class="p">,</span> <span class="n">lang_ver_transl</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">lang_ver_transl</span><span class="p">),</span>
-                    <span class="n">lang_transl</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">lang_transl</span><span class="p">)):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">similarity_vec</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">languages</span> <span class="o">=</span> <span class="n">lang_transl</span> <span class="o">+</span> <span class="n">lang_ver_transl</span>
-    <span class="n">language_input</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">language_input</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
-    <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">languages</span><span class="p">:</span>
-        <span class="n">similarity_vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bible</span><span class="o">.</span><span class="n">similar</span><span class="p">(</span><span class="n">language_input</span><span class="p">,</span> <span class="n">each</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">languages</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">similarity_vec</span><span class="p">)]</span></div>
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the keyboard will be shown.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">start_markup</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">(</span>
+        <span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">one_time_keyboard</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">COMMANDS</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">start_markup</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">start_markup</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="s2">&quot;/hide_keyboard&quot;</span><span class="p">)</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
+        <span class="n">chat_message</span><span class="o">.</span><span class="n">from_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;⌨️❔&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">start_markup</span>
+    <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="verify_version"><a class="viewcode-back" href="../../src.html#src.main.verify_version">[docs]</a><span class="k">def</span> <span class="nf">verify_version</span><span class="p">(</span><span class="n">version_input</span><span class="p">,</span> <span class="n">versions</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">dict_api_ver2acr</span><span class="o">.</span><span class="n">keys</span><span class="p">())):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">similarity_vec</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="viewcode-block" id="command_hide"><a class="viewcode-back" href="../../src.html#src.main.command_hide">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;hide_keyboard&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Hide the keyboard</span>
 
-    <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="n">versions</span><span class="p">:</span>
-        <span class="n">similarity_vec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Bible</span><span class="o">.</span><span class="n">similar</span><span class="p">(</span><span class="n">version_input</span><span class="p">,</span> <span class="n">each</span><span class="p">))</span>
-
-    <span class="k">return</span> <span class="n">versions</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">similarity_vec</span><span class="p">)]</span></div>
-
-
-<div class="viewcode-block" id="send_translated_message"><a class="viewcode-back" href="../../src.html#src.main.send_translated_message">[docs]</a><span class="k">def</span> <span class="nf">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">language</span> <span class="o">==</span> <span class="s2">&quot;English&quot;</span><span class="p">:</span>
-            <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
-                <span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">)</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/ &quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">)</span>
-            <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
-    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;In send translated message - Exception: &quot;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Connection Error&quot;</span><span class="p">)</span></div>
-        <span class="c1"># DO NOT try to send the daily verse or any service if the user blocked the bot</span>
-        <span class="c1">#send_translated_message(id, text, language)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the keyboard will be hidden.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hide_markup</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardRemove</span><span class="p">()</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;⌨💤...&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">hide_markup</span><span class="p">)</span></div>
 
 
 <span class="c1">########################################################################</span>
-<span class="c1">################         ACTION FUNCTIONS           ###################</span>
+<span class="c1">################            BOT INTERACTION          ###################</span>
 <span class="c1">########################################################################</span>
-<span class="c1"># start page</span>
-<div class="viewcode-block" id="command_start"><a class="viewcode-back" href="../../src.html#src.main.command_start">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="command_start"><a class="viewcode-back" href="../../src.html#src.main.command_start">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;start&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start the conversation of the bot</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">first_name</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="n">command_help</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
 
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">verify_id</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">add_user</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
 
-    <span class="n">start_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;☝ This bot is a free service for educational purposes</span>
-<span class="s2">                    </span><span class="se">\n</span><span class="s2">This bot 🤖 can: </span><span class="se">\n\t</span><span class="s2">1.</span>
-<span class="s2">                    Send you daily 1 chapter of the Bible in a sequence (&#39;/subscribe&#39;) </span>
-<span class="s2">                    </span><span class="se">\n\t</span><span class="s2">2. If you are not subscribed or want to advance more, you can </span>
-<span class="s2">                     manually request the chapter (&#39;/send_chapter&#39;).</span>
-<span class="s2">                      </span><span class="se">\n\t</span><span class="s2">3.❓ Also you can ask for any verse or passage (&#39;/verse&#39;)</span>
-<span class="s2">                       </span><span class="se">\n\n</span><span class="s2">Go to help (&#39;/help&#39;) for more information&quot;&quot;&quot;</span>
-    <span class="n">send_translated_message</span><span class="p">(</span><span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">start_text</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>  <span class="c1"># Send start text</span>
+<div class="viewcode-block" id="command_send_chapter"><a class="viewcode-back" href="../../src.html#src.main.command_send_chapter">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;send_chapter&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">command_send_chapter</span><span class="p">(</span><span class="n">chat_message</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Send chapter bot interaction</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">send_chapter</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">single_message</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">single_message</span><span class="p">)</span>
     <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
 
 
-<span class="c1"># send_chapter page</span>
-<div class="viewcode-block" id="command_send_chapter"><a class="viewcode-back" href="../../src.html#src.main.command_send_chapter">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;send_chapter&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">command_send_chapter</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">book</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">origin_language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">chapter</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_chapter</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">bible_version</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_bible_version</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+<div class="viewcode-block" id="command_verse"><a class="viewcode-back" href="../../src.html#src.main.command_verse">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;verse&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">command_verse</span><span class="p">(</span><span class="n">chat_message</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set verse</span>
 
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;Sending chapter  ...&quot;</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-
-        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">book</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">chapter</span><span class="p">)])</span>
-
-        <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">origin_language</span> <span class="ow">in</span> <span class="n">lang_ver_transl</span><span class="p">:</span>
-                <span class="n">n_message</span> <span class="o">=</span> <span class="n">message</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">n_message</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">n_message</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
-                    <span class="n">message</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span><span class="p">)</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">n_message</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">)</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-        <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="s2">&quot;Error - please retry&quot;</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Send chapter page:&quot;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">n_message</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">telebot</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">split_string</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)]</span>
-        <span class="k">for</span> <span class="n">each_message</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-            <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">each_message</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-
-        <span class="n">next_chapter</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_next_chapter</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-        <span class="n">next_book</span> <span class="o">=</span> <span class="n">next_chapter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">next_chapter</span> <span class="o">=</span> <span class="n">next_chapter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">set_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">next_book</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">set_chapter</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">next_chapter</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-        <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="command_send_chapter_crontab"><a class="viewcode-back" href="../../src.html#src.main.command_send_chapter_crontab">[docs]</a><span class="k">def</span> <span class="nf">command_send_chapter_crontab</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">book</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">origin_language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">chapter</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_chapter</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">bible_version</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_bible_version</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-    <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;Sending daily chapter&quot;</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-
-    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">book</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">chapter</span><span class="p">)])</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">origin_language</span> <span class="ow">in</span> <span class="n">lang_ver_transl</span><span class="p">:</span>
-            <span class="n">n_message</span> <span class="o">=</span> <span class="n">message</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">n_message</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">n_message</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
-                <span class="n">message</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span><span class="p">)</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">n_message</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">)</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-
-    <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="s2">&quot;Error - please retry&quot;</span>
-        <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
-            <span class="s2">&quot;In send command_send_chapter_crontab - Exception: &quot;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-
-    <span class="n">response</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">telebot</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">split_string</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)]</span>
-
-    <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">n_message</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">each_message</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">each_message</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-
-    <span class="n">next_chapter</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_next_chapter</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-    <span class="n">next_book</span> <span class="o">=</span> <span class="n">next_chapter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">next_chapter</span> <span class="o">=</span> <span class="n">next_chapter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
-
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">next_book</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_chapter</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">next_chapter</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span></div>
-
-
-<span class="c1"># set verse page</span>
-<div class="viewcode-block" id="command_verse"><a class="viewcode-back" href="../../src.html#src.main.command_verse">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;verse&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">command_verse</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_verse</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;Type the desired passage&quot;</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-        <span class="n">Example</span> <span class="o">=</span> <span class="s2">&quot;Examples: </span><span class="se">\n</span><span class="s2">John 14:6 </span><span class="se">\n</span><span class="s2">Genesis 2:1-4 </span><span class="se">\n</span><span class="s2">Luke 3&quot;</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">Example</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">verse</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">single_message</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">single_message</span><span class="p">)</span></div>
 
 
-<span class="c1"># information page</span>
-<div class="viewcode-block" id="command_information"><a class="viewcode-back" href="../../src.html#src.main.command_information">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;information&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">command_information</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="command_information"><a class="viewcode-back" href="../../src.html#src.main.command_information">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;information&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">command_information</span><span class="p">(</span><span class="n">chat_message</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show information</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">status</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_status</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">book</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">chapter</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_chapter</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">bible_version</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_bible_version</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="c1"># Full version name (no acronym)</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">bible_version</span> <span class="o">=</span> <span class="n">dict_api_acr2ver</span><span class="p">[</span><span class="n">bible_version</span><span class="p">]</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="n">bible_version</span> <span class="o">=</span> <span class="s2">&quot;akjv&quot;</span>
-
-        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;✅&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;❌&#39;</span>
-
-        <span class="n">info_text</span> <span class="o">=</span> <span class="s2">&quot;📒 Information </span><span class="se">\n</span><span class="s2">📚 Subscribed: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">status</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">🌎 Language: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span>
-            <span class="n">language</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📖 Current Bible Book: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span>
-            <span class="n">book</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📑 Current Chapter: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span>
-                <span class="n">chapter</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">📕 Current Bible Version: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">bible_version</span><span class="p">)</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">info_text</span><span class="p">,</span>
-                                <span class="n">language</span><span class="p">)</span>  <span class="c1"># Send info text</span>
-        <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">information</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
 
 
-<span class="c1"># help page</span>
-<div class="viewcode-block" id="command_help"><a class="viewcode-back" href="../../src.html#src.main.command_help">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">command_help</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<div class="viewcode-block" id="command_help"><a class="viewcode-back" href="../../src.html#src.main.command_help">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;help&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">command_help</span><span class="p">(</span><span class="n">chat_message</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show help message</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="n">help_text</span> <span class="o">=</span> <span class="s2">&quot;Avaliable commands: </span><span class="se">\n\n</span><span class="s2">&quot;</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">commands</span><span class="p">:</span>  <span class="c1"># generate help text out of the commands dictionary defined at the top</span>
-            <span class="n">help_text</span> <span class="o">+=</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">commands</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="c1"># send the generated help page</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">help_text</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-        <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">help</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="show_mainkeyboard"><a class="viewcode-back" href="../../src.html#src.main.show_mainkeyboard">[docs]</a><span class="k">def</span> <span class="nf">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">start_markup</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">(</span>
-        <span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">one_time_keyboard</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="n">keys</span><span class="p">()))):</span>
-        <span class="n">start_markup</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">commands</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="n">each</span><span class="p">])</span>
-
-    <span class="n">start_markup</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="s2">&quot;/hide_keyboard&quot;</span><span class="p">)</span>
-
-    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">chat_message</span><span class="o">.</span><span class="n">from_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;⌨️❔&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">start_markup</span><span class="p">)</span></div>
-
-
-<span class="c1"># Hide keyboard</span>
-<div class="viewcode-block" id="command_hide"><a class="viewcode-back" href="../../src.html#src.main.command_hide">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;hide_keyboard&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">command_hide</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="c1"># bot.send_chat_action(id, &#39;typing&#39;)</span>
-    <span class="n">hide_markup</span> <span class="o">=</span> <span class="n">telebot</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardRemove</span><span class="p">()</span>
-    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;⌨💤...&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">hide_markup</span><span class="p">)</span></div>
-
-
-<span class="c1"># subscribe/ unsubscribe</span>
-<div class="viewcode-block" id="command_subscribe"><a class="viewcode-back" href="../../src.html#src.main.command_subscribe">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;subscribe&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">command_subscribe</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">current_status</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_status</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">current_status</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">new_status</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">new_status</span> <span class="o">=</span> <span class="mi">1</span>
-
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">new_status</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">new_status</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;✅&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;❌&#39;</span>
-
-        <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Subscription: </span><span class="se">\t</span><span class="s2">&quot;</span><span class="o">+</span><span class="n">status</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>  <span class="c1"># send the generated text</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
-
-
-<span class="c1"># set language page</span>
-<div class="viewcode-block" id="command_language"><a class="viewcode-back" href="../../src.html#src.main.command_language">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;language&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="command_language"><a class="viewcode-back" href="../../src.html#src.main.command_language">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;language&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">command_language</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Modify language initial message and state</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_language</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;Type your new language&quot;</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">language</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
 
 
-<span class="c1"># set book page</span>
-<div class="viewcode-block" id="command_book"><a class="viewcode-back" href="../../src.html#src.main.command_book">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;choose_book&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="command_book"><a class="viewcode-back" href="../../src.html#src.main.command_book">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;choose_book&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">command_book</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Modify book initial message and state</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;Type the desired bible book&quot;</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">book</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
 
 
-<span class="c1"># set current chapter</span>
-<div class="viewcode-block" id="command_chapter"><a class="viewcode-back" href="../../src.html#src.main.command_chapter">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;choose_chapter&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="command_chapter"><a class="viewcode-back" href="../../src.html#src.main.command_chapter">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;choose_chapter&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">command_chapter</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Modify book chapter message and state</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
-
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_chapter</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;Type the number of the desired chapter to start with&quot;</span><span class="p">,</span> <span class="n">language</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">chapter</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="command_bible_version"><a class="viewcode-back" href="../../src.html#src.main.command_bible_version">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bible_version&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="command_bible_version"><a class="viewcode-back" href="../../src.html#src.main.command_bible_version">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">commands</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bible_version&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">command_bible_version</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Modify bible version initial message and state</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">message</span><span class="p">,</span> <span class="n">versions</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">bible_version</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
 
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_bible_version</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-    <span class="n">verify_id</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">verify_id</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">language</span> <span class="ow">in</span> <span class="n">dict_api_version</span><span class="p">:</span>
-            <span class="n">versions</span> <span class="o">=</span> <span class="n">dict_api_version</span><span class="p">[</span><span class="n">language</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">dict_api_version</span><span class="p">[</span><span class="s2">&quot;English&quot;</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">versions</span> <span class="o">=</span> <span class="n">dict_api_version</span><span class="p">[</span><span class="s2">&quot;English&quot;</span><span class="p">]</span>
-
+    <span class="k">if</span> <span class="n">versions</span> <span class="o">!=</span> <span class="p">[]:</span>
         <span class="n">version_markup</span> <span class="o">=</span> <span class="n">types</span><span class="o">.</span><span class="n">ReplyKeyboardMarkup</span><span class="p">(</span>
-            <span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">one_time_keyboard</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">versions</span><span class="p">)):</span>
+            <span class="n">resize_keyboard</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">one_time_keyboard</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">each</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">versions</span><span class="p">)):</span>
             <span class="n">version_markup</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">versions</span><span class="p">[</span><span class="n">each</span><span class="p">])</span>
-
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_bible_version</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-
-        <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">chat_message</span><span class="o">.</span><span class="n">from_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;⌨️&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">version_markup</span><span class="p">)</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span>
+            <span class="n">chat_message</span><span class="o">.</span><span class="n">from_user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;⌨️&quot;</span><span class="p">,</span> <span class="n">reply_markup</span><span class="o">=</span><span class="n">version_markup</span>
+        <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
+        <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
 
 
-<span class="c1"># default handler for every other text</span>
-<div class="viewcode-block" id="command_default"><a class="viewcode-back" href="../../src.html#src.main.command_default">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">message</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="command_default"><a class="viewcode-back" href="../../src.html#src.main.command_default">[docs]</a><span class="nd">@bot</span><span class="o">.</span><span class="n">message_handler</span><span class="p">(</span><span class="n">func</span><span class="o">=</span><span class="k">lambda</span> <span class="n">message</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="n">content_types</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">command_default</span><span class="p">(</span><span class="n">chat_message</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        TODO: docstring</span>
-<span class="sd">        TODO - put all in a tuple instead single queries - optimize db queries</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;Main interaction menu for income</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        chat_message (Any):</span>
+<span class="sd">            On what chat the bot will interact.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">tg_pages</span><span class="o">.</span><span class="n">default</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="n">message</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span> <span class="k">else</span> <span class="n">message</span>
+    <span class="k">for</span> <span class="n">single_message</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">bot</span><span class="o">.</span><span class="n">send_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">single_message</span><span class="p">)</span>
+    <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span></div>
 
-    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">create_db</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">verify_id</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-        <span class="n">send_translated_message</span><span class="p">(</span>
-            <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;You are a new user. Check what I can do at /start&quot;</span><span class="p">)</span>
-        <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-        <span class="n">command_start</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">lang_selection</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_mod_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">bible_book_selection</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_mod_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">chapter_selection</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_mod_chapter</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">bible_version_selection</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_mod_bible_version</span><span class="p">(</span>
-            <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-        <span class="n">verse</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_verse</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">origin_language</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_language</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-        <span class="n">bible_version</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_bible_version</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">lang_selection</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">language</span> <span class="o">=</span> <span class="n">verify_language</span><span class="p">(</span><span class="n">chat_message</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_language</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">language</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_language</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">language</span> <span class="ow">in</span> <span class="n">dict_api_version</span><span class="p">:</span>
-                <span class="n">Database_control</span><span class="o">.</span><span class="n">set_bible_version</span><span class="p">(</span>
-                    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">dict_api_ver2acr</span><span class="p">[</span><span class="n">dict_api_version</span><span class="p">[</span><span class="n">language</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">Database_control</span><span class="o">.</span><span class="n">set_bible_version</span><span class="p">(</span>
-                    <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="s1">&#39;akjv&#39;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-            <span class="n">send_translated_message</span><span class="p">(</span>
-                <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;The selected language is &quot;</span> <span class="o">+</span> <span class="n">language</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-            <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">verse</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">send_translated_message</span><span class="p">(</span>
-                <span class="n">user_id</span><span class="p">,</span> <span class="s2">&quot;Accepted request - Searching ...&quot;</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">text</span>
-
-            <span class="k">try</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">origin_language</span> <span class="ow">in</span> <span class="n">lang_ver_transl</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">origin_language</span> <span class="o">!=</span> <span class="s1">&#39;English&#39;</span><span class="p">:</span>
-                        <span class="n">n_message</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
-                            <span class="n">message</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">n_message</span> <span class="o">=</span> <span class="n">message</span>
-
-                    <span class="k">if</span> <span class="n">n_message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
-                        <span class="n">n_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">n_message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
-                            <span class="s2">&quot;:&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">n_message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))])</span>
-
-                    <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">n_message</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">)</span>
-
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">n_message</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
-                        <span class="n">message</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span><span class="p">)</span>
-
-                    <span class="k">if</span> <span class="n">n_message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">:</span>
-                        <span class="n">n_message</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">n_message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
-                            <span class="s2">&quot;:&quot;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">n_message</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))])</span>
-
-                    <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">get_message</span><span class="p">(</span><span class="n">n_message</span><span class="p">,</span> <span class="n">bible_version</span><span class="p">)</span>
-                    <span class="n">response</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
-                        <span class="n">response</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-
-                <span class="n">Database_control</span><span class="o">.</span><span class="n">set_verse</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-            <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">)</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
-                <span class="n">log</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;In message handler - Exception: &quot;</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
-
-            <span class="n">response</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">telebot</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">split_string</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="mi">3000</span><span class="p">)]</span>
-            <span class="k">for</span> <span class="n">each_message</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-                <span class="n">send_translated_message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">each_message</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-            <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">bible_book_selection</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">text</span>
-            <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">origin_language</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">lang_ver_transl</span><span class="p">)</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">lang_transl</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">origin_language</span> <span class="o">!=</span> <span class="s1">&#39;English&#39;</span><span class="p">:</span>
-                    <span class="n">n_message</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">translate_message</span><span class="p">(</span>
-                        <span class="n">message</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;English&quot;</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="n">origin_language</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">n_message</span> <span class="o">=</span> <span class="n">message</span>
-
-                <span class="n">book</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">verify_book</span><span class="p">(</span><span class="n">n_message</span><span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">send_translated_message</span><span class="p">(</span>
-                    <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                    <span class="s2">&quot;As your language is not available, please write in English&quot;</span><span class="p">,</span>
-                    <span class="n">origin_language</span><span class="p">)</span>
-                <span class="n">n_message</span> <span class="o">=</span> <span class="n">message</span>
-
-            <span class="n">book</span> <span class="o">=</span> <span class="n">Bible</span><span class="o">.</span><span class="n">verify_book</span><span class="p">(</span><span class="n">n_message</span><span class="p">)</span>
-
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">book</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-            <span class="n">send_translated_message</span><span class="p">(</span>
-                <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;The selected Book is &quot;</span> <span class="o">+</span> <span class="n">book</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-            <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">chapter_selection</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">text</span>
-            <span class="n">book</span> <span class="o">=</span> <span class="n">Database_control</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">():</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">Bible</span><span class="o">.</span><span class="n">verify_book_chapter</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span> <span class="o">==</span> <span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">):</span>
-                    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_chapter</span><span class="p">(</span>
-                        <span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-                    <span class="n">send_translated_message</span><span class="p">(</span>
-                        <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="s2">&quot;The selected chapter is &quot;</span> <span class="o">+</span> <span class="n">message</span><span class="p">,</span> <span class="n">origin_language</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">send_translated_message</span><span class="p">(</span>
-                        <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                        <span class="s2">&quot;This chapter doesn&#39;t exist for the book of &quot;</span><span class="o">+</span>
-                        <span class="n">book</span><span class="o">+</span><span class="s2">&quot;. </span><span class="se">\n</span><span class="s2">Chapter 1 selected.&quot;</span><span class="p">,</span>
-                        <span class="n">origin_language</span><span class="p">)</span>
-                    <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
-                    <span class="n">Database_control</span><span class="o">.</span><span class="n">set_chapter</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
-                <span class="n">send_translated_message</span><span class="p">(</span>
-                    <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                    <span class="s2">&quot;This is not a number. </span><span class="se">\n</span><span class="s2">Chapter 1 selected.&quot;</span><span class="p">,</span>
-                    <span class="n">origin_language</span><span class="p">)</span>
-                <span class="n">Database_control</span><span class="o">.</span><span class="n">set_chapter</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_book</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-            <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-
-        <span class="k">elif</span> <span class="n">bible_version_selection</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">chat_message</span><span class="o">.</span><span class="n">text</span>
-            <span class="n">command_hide</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-            <span class="n">version</span> <span class="o">=</span> <span class="n">verify_version</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-            <span class="n">acr</span> <span class="o">=</span> <span class="n">dict_api_ver2acr</span><span class="p">[</span><span class="n">version</span><span class="p">]</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_bible_version</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">acr</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-            <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">send_translated_message</span><span class="p">(</span>
-                <span class="n">chat_message</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
-                <span class="s2">&quot;I don&#39;t understand. </span><span class="se">\n</span><span class="s2">Try the help page at &#39;/help&#39;&quot;</span><span class="p">,</span>
-                <span class="n">origin_language</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">set_mod_default</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
-            <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
-            <span class="n">show_mainkeyboard</span><span class="p">(</span><span class="n">chat_message</span><span class="p">)</span>
-
-    <span class="n">Database_control</span><span class="o">.</span><span class="n">close_db</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span></div>
-    
 
 <span class="c1">########################################################################</span>
 <span class="c1">################            MAIN FUNCTION             ##################</span>
 <span class="c1">########################################################################</span>
-<span class="c1">#telebot.apihelper.READ_TIMEOUT = 1</span>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="c1"># bot.polling(none_stop=True, timeout=30)</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting bot&#39;</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting bot&quot;</span><span class="p">)</span>
             <span class="n">bot</span><span class="o">.</span><span class="n">polling</span><span class="p">(</span><span class="n">none_stop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Bot polling error: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">args</span><span class="p">))</span>
             <span class="n">bot</span><span class="o">.</span><span class="n">stop_polling</span><span class="p">()</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+            <span class="n">sleep</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
 </pre></div>
 
            </div>

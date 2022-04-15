@@ -161,9 +161,12 @@ def translate_message(
         Translated text into the goal language
     """
     try:
-        return translator.translate(
-            message, dest=language, src=src
-        ).text.replace("/ ", "/")
+        if src == "English" and language == "English":
+            return message
+        else:
+            return translator.translate(
+                message, dest=language, src=src
+            ).text.replace("/ ", "/")
     except (Exception) as exception:
-        log.critical("In send translated message - Exception: ", exception)
+        log.critical(f"In send translated message - Exception: {exception}")
         print("Connection Error")

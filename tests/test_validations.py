@@ -10,8 +10,6 @@ sys.path.append("./src/")
 import utils.constants as K
 import utils.validations as validations
 
-# for book, n_chapters in K.TEST_BOOK_CHAPTERS.items():
-#     print(validations.verify_book_chapter(book, str(n_chapters)))
 
 class TestValidations(unittest.TestCase):
     def test_similar(self):
@@ -75,4 +73,7 @@ class TestValidations(unittest.TestCase):
         )
 
     def test_translate_message(self):
-        self.assertEqual(validations.translate_message("hola"), "hello")
+        self.assertEqual(
+            validations.translate_message("hola", "English", "Spanish"),
+            "hello",
+        )

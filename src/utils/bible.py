@@ -1,9 +1,7 @@
 """
     Library of Bible functions
 """
-from difflib import SequenceMatcher
 import json
-import numpy as np
 import requests
 
 import utils.validations as validations
@@ -57,37 +55,39 @@ def get_message(message: str, bible_version: str = "akjv"):
     """
     book = validations.verify_book(message)
     details = message.split(" ")[-1]
-    message = " ".join([book, details])
+    message = " ".join([book, details]).replace(".", "")
 
     if message[-1].isnumeric():
         requesting = requests.get(
             JSON_API_URL + message + JSON_API_URL_2PART + bible_version
         )
-
-        text = requesting.text[1:-2]
-        jsontxt = json.loads(text)
-
         try:
-            verses = list(jsontxt["book"][0]["chapter"].keys())
-            full_verses = [
-                str(each_verse)
-                + " "
-                + jsontxt["book"][0]["chapter"][each_verse]["verse"]
-                for each_verse in verses
-            ]
+            text = requesting.text[1:-2]
+            jsontxt = json.loads(text)
 
-        except Exception as exception:
-            print(exception)
-            verses = list(jsontxt["chapter"].keys())
-            full_verses = [
-                f"{str(each_verse)} " + jsontxt["chapter"][each_verse]["verse"]
-                for each_verse in verses
-            ]
+            try:
+                verses = list(jsontxt["book"][0]["chapter"].keys())
+                full_verses = [
+                    str(each_verse)
+                    + " "
+                    + jsontxt["book"][0]["chapter"][each_verse]["verse"]
+                    for each_verse in verses
+                ]
 
-        if text == "U":
-            full_verses = "Error - Passage not found"
+            except Exception:
+                verses = list(jsontxt["chapter"].keys())
+                full_verses = [
+                    f"{str(each_verse)} "
+                    + jsontxt["chapter"][each_verse]["verse"]
+                    for each_verse in verses
+                ]
+
+            if text == "U":
+                full_verses = "Error - Passage not found"
+        except Exception:
+            full_verses = "Error"
     else:
-        full_verses = "Verify the chapter of the passage"
+        full_verses = "Error - Verify the chapter of the passage"
 
     return "".join(full_verses)
 
@@ -111,7 +111,7 @@ def get_next_chapter(present_chapter: str, bible_version: str = "akjv"):
 
     """
     book = validations.verify_book(present_chapter)
-    chapter = present_chapter.split(" ")[-1]
+    chapter = present_chapter.split(" ")[-1].replace(".", "")
     present_chapter = " ".join([book, chapter])
 
     try:
@@ -129,8 +129,7 @@ def get_next_chapter(present_chapter: str, bible_version: str = "akjv"):
             new_chapter = 1
             next_chapter = " ".join([new_book, str(new_chapter)])
 
-    except Exception as exception:
-        print(exception)
+    except Exception:
         number_book = 0
         new_book = Books[number_book + 1 - 1]
         new_chapter = 1

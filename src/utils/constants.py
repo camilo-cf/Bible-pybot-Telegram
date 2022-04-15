@@ -1,7 +1,6 @@
 """
     Constants file for the project.
 """
-
 import os
 
 BOOKS = [
@@ -80,20 +79,6 @@ JSON_API_URL_2PART = "&version="
 
 # Telegram TOKEN
 TOKEN = os.getenv("BOT_TOKEN")
-
-# command description used in the "help" command
-COMMANDS = {
-    "start": "☝ Know what can I do",
-    "send_chapter": "📧 Send now the chapter to read",
-    "verse": "⛪ Request a Bible passage",
-    "information": "📒 Know your information and settings for this bot",
-    "help": "❔ Gives you information about the available commands",
-    "subscribe": "📚 Receive 1 Bible chapter every day at a given time or Cancel it",
-    "language": "🌎 Select your preferred language",
-    "choose_book": "📖 Select the current bible book you are reading",
-    "choose_chapter": "📑 Select the current chapter you want to start reading",
-    "bible_version": "📕 Select the bible version",
-}
 
 TEST_BOOK_CHAPTERS = {
     "Genesis": 50,
@@ -203,3 +188,55 @@ with open(
 languages_translation_set = set(languages_translation)
 lang_ver_transl = languages_translation_set.intersection(unique_languages_api)
 lang_transl = languages_translation_set.difference(unique_languages_api)
+
+# APP Messages
+# Command description used in the "help" command
+COMMANDS = {
+    "start": "☝ Know what can I do",
+    "send_chapter": "📧 Send now the chapter to read",
+    "verse": "⛪ Request a Bible passage",
+    "information": "📒 Know your information and settings for this bot",
+    "help": "❔ Gives you information about the available commands",
+    "language": "🌎 Select your preferred language",
+    "choose_book": "📖 Select the current bible book you are reading",
+    "choose_chapter": "📑 Select the current chapter you want to start reading",
+    "bible_version": "📕 Select the bible version",
+}
+
+START_MSG = """
+    ☝ This bot is a free service for educational purposes
+    \nThis bot 🤖 can: \n1. You can receive the next chapter of your current reading path.
+    \n\t2.❓ Also you can ask for any verse or passage.
+    \nGo to help for more information
+    """
+
+NEW_USR_ERROR = "You are a new user. Check what I can do at"
+ERROR = "Error - please retry"
+
+VERSE_MSG = [
+    "Type the desired passage",
+    "Examples: \nJohn 14:6 \nGenesis 2:1-4 \nLuke 3",
+]
+
+INFO_MSG = """
+📒 Information
+🌎 Language: \t{}
+📖 Current Bible Book: \t{}
+📑 Current Chapter: \t{}
+📕 Current Bible Version: \t{}"""
+
+HELP_MSG = "Avaliable commands: "
+START_FN = "/start"
+LANG_MSG = "Type your new language"
+BOOK_MSG = "Type the desired bible book"
+CHAPTER_MSG = "Type the number of the desired chapter to start with"
+SELECTED_LANG = "The selected language is {}"
+ERROR_SELECT_BOOK = (
+    "As your language is not available, please write in English"
+)
+SELECT_BOOK = "The selected Book is {}"
+SELECT_VERSION = "The Bible version is {}"
+SELECT_CHAPTER = "The selected chapter is {}"
+SELECT_CHAPTER_ERROR = "This chapter doesn't exist for the book of {}. \nInstead, Chapter is 1 selected."
+SELECT_CHAPTER_ERROR_NAN = "This is not a number. \nChapter 1 is selected."
+NO_UNDERSTAND = "I don't understand. \nTry the help page at"

@@ -4,7 +4,6 @@ CREATE_TABLE = """
         CREATE TABLE IF NOT EXISTS users ( 
             id          INTEGER         PRIMARY KEY     NOT NULL, 
             name        TEXT            NOT NULL, 
-            status      BOOLEAN         DEFAULT 0,
             book        VARCHAR(30)     DEFAULT Genesis, 
             chapter     TINYINT         DEFAULT 1, 
             language    TEXT            DEFAULT English,
@@ -24,8 +23,6 @@ SET_LANGUAGE = "UPDATE users SET language = '{}' where id = '{}';"
 GET_LANGUAGE = "SELECT language FROM users WHERE id = '{}';"
 SET_MOD_LANGUAGE = "UPDATE users SET mod_language = '{}' where id = '{}';"
 GET_MOD_LANGUAGE = "SELECT mod_language FROM users WHERE id = '{}';"
-SET_STATUS = "UPDATE users SET status = '{}' where id = '{}';"
-GET_STATUS = "SELECT status FROM users WHERE id = '{}';"
 SET_BOOK = "UPDATE users SET book = '{}' where id = '{}';"
 GET_BOOK = "SELECT book FROM users WHERE id = '{}';"
 SET_MOD_BOOK = "UPDATE users SET mod_book = '{}' where id = '{}';"

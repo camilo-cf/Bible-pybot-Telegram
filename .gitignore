@@ -6,3 +6,4 @@ __*
 *.tar
 .coverage
 *.vscode/
+htmlcov/*

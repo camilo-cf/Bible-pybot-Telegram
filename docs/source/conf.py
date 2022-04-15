@@ -60,4 +60,4 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 
 # Important to add when import issues occur pointing to the right module
-autodoc_mock_imports = ["utils"]
+autodoc_mock_imports = ["utils", "telegram_pages"]

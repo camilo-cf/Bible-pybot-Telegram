@@ -31,7 +31,7 @@ jobs:
       - name: Generate coverage report
         run: |
           pip install -r requirements.txt
-          coverage run -m unittest tests/*.py
+          coverage run -m unittest
           coverage xml
       - uses: codecov/codecov-action@v3.0.0
         with:

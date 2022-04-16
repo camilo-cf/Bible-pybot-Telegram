@@ -32,4 +32,4 @@ jobs:
       with:
         coverageCommand: |
           coverage run -m unittest discover
-          coverage xml --omit='env/*,tests/*'
+          coverage xml

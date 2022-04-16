@@ -31,7 +31,7 @@ jobs:
       with:
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER }}
-      coverageCommand: |
-        coverage run -m unittest discover
-        coverage xml
+        coverageCommand: |
+          coverage run -m unittest discover
+          coverage xml
       

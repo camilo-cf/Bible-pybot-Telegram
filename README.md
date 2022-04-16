@@ -1,3 +1,5 @@
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
+
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=bugs)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
@@ -7,6 +9,12 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/39e59bfbd5a36e37a24f/maintainability)](https://codeclimate.com/github/camilo-cf/Bible-pybot-Telegram/maintainability)
 [![codecov](https://codecov.io/gh/camilo-cf/Bible-pybot-Telegram/branch/main/graph/badge.svg?token=53XILYFINM)](https://codecov.io/gh/camilo-cf/Bible-pybot-Telegram)
 [![Known Vulnerabilities](https://snyk.io/test/github/camilo-cf/bible-pybot-telegram/badge.svg)](https://snyk.io/test/github/camilo-cf/bible-pybot-telegram)
+[![Codecov](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/codecov_main.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/codecov_main.yml)
+[![Docker Snyk](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/docker_snyk.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/docker_snyk.yml)
+[![Pylint](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/pylint.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/pylint.yml)
+[![Python Snyk](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/python_snyk.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/python_snyk.yml)
+[![Sphinx](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/sphinx_action.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/sphinx_action.yml)
+[![pages-build-deployment](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/pages/pages-build-deployment)
 
 
 # Bible-pybot-Telegram
@@ -45,4 +53,4 @@ The translation are done with the **googletrans** library.
 
 # Deployment
 
-TDB
+TBD

@@ -33,7 +33,7 @@ jobs:
           pip install -r requirements.txt
           coverage run tests/test_bible.py
           coverage xml
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3.0.0
         with:
           files: ./coverage.xml #,./coverage2.xml # optional
           flags: unittests # optional

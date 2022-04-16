@@ -4,7 +4,12 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=bugs)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=coverage)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=camilo-cf_Bible-pybot-Telegram&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=camilo-cf_Bible-pybot-Telegram)
 [![CodeFactor](https://www.codefactor.io/repository/github/camilo-cf/bible-pybot-telegram/badge)](https://www.codefactor.io/repository/github/camilo-cf/bible-pybot-telegram)
 [![Maintainability](https://api.codeclimate.com/v1/badges/39e59bfbd5a36e37a24f/maintainability)](https://codeclimate.com/github/camilo-cf/Bible-pybot-Telegram/maintainability)
 [![codecov](https://codecov.io/gh/camilo-cf/Bible-pybot-Telegram/branch/main/graph/badge.svg?token=53XILYFINM)](https://codecov.io/gh/camilo-cf/Bible-pybot-Telegram)
@@ -15,7 +20,8 @@
 [![Python Snyk](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/python_snyk.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/python_snyk.yml)
 [![Sphinx](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/sphinx_action.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/sphinx_action.yml)
 [![pages-build-deployment](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/pages/pages-build-deployment)
-
+[![Mypy](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/mypy.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/mypy.yml)
+[![SonarCloud](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/sonarcloud.yml/badge.svg)](https://github.com/camilo-cf/Bible-pybot-Telegram/actions/workflows/sonarcloud.yml)
 
 # Bible-pybot-Telegram
 

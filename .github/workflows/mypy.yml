@@ -15,6 +15,7 @@ jobs:
     - name: Install Dependencies
       run: |
         pip install mypy
+        pip install types-requests
     - name: mypy
       run: |
         mypy --ignore-missing-imports --no-warn-no-return src/ tests/

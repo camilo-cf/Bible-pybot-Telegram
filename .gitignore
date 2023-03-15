@@ -7,3 +7,4 @@ __*
 .coverage
 *.vscode/
 coverage*
+nohup.out

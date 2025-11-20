@@ -34,10 +34,12 @@ jobs:
           pip install -r requirements.txt
           coverage run -m unittest tests/test_*.py
           coverage xml
-      - uses: codecov/codecov-action@v5
+      - name: Upload to Codecov
+        continue-on-error: true  # Don't block PR on upload issues
+        uses: codecov/codecov-action@v5
         with:
-          files: ./coverage.xml #,./coverage2.xml # optional
-          flags: unittests # optional
-          name: codecov-umbrella # optional
-          fail_ci_if_error: true # optional (default = false)
-          verbose: true # optional (default = false)
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false  # Don't fail on upload errors
+          verbose: true

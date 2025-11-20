@@ -5,7 +5,7 @@ jobs:
   snyk-ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Build a Docker image
       run: docker build --build-arg BOT_TOKEN=${{ secrets.BOT_TOKEN }} -f docker/ubuntu/Dockerfile -t biblepybottelegram .
     - name: Run Snyk to check Docker image for vulnerabilities

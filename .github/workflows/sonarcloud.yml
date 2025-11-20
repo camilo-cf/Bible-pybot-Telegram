@@ -22,6 +22,7 @@ jobs:
       - name: Run tox
         run: tox -e py
       - name: SonarCloud Scan
+        continue-on-error: true  # Don't block PR on code quality suggestions
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any

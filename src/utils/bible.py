@@ -14,7 +14,7 @@ JSON_API_URL = constants.JSON_API_URL
 JSON_API_URL_2PART = constants.JSON_API_URL_2PART
 
 
-def get_chapter(book: str, chapter: int, bible_version: str = "akjv"):
+def get_chapter(book: str, chapter: int, bible_version: str = "akjv") -> str:
     """Get the Bible chapter
 
     Args:
@@ -30,13 +30,22 @@ def get_chapter(book: str, chapter: int, bible_version: str = "akjv"):
     Return:
         The message of the bible in the given book and chapter (str) [it can be long]
     """
-    requesting = requests.get(
-        (
-            ((JSON_API_URL + book) + str(chapter) + JSON_API_URL_2PART)
-            + bible_version
-        )
-    )
-    return requesting.text[1:-2]
+    try:
+        # v2 API format: https://query.getbible.net/v2/{version}/{book} {chapter}
+        url = f"{JSON_API_URL}{bible_version}/{book}%20{chapter}"
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        
+        # v2 API returns dict with key like "akjv_1_1"
+        if data:
+            first_key = list(data.keys())[0]
+            chapter_data = data[first_key]
+            verses = chapter_data.get('verses', [])
+            return json.dumps(chapter_data)  # Return as JSON string
+        return "Error: No data"
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 def get_message(message: str, bible_version: str = "akjv") -> list:
@@ -51,48 +60,49 @@ def get_message(message: str, bible_version: str = "akjv") -> list:
             Version of the Bible.
 
     Return:
-        A list wit the message of the bible in the given book and chapter (list) [it can be long].
+        A list with the message of the bible in the given book and chapter (list) [it can be long].
     """
-    book = validations.verify_book(message)
-    details = message.split(" ")[-1]
-    message = " ".join([book, details]).replace(".", "")
+    try:
+        book = validations.verify_book(message)
+        details = message.split(" ")[-1]
+        passage = " ".join([book, details]).replace(".", "")
 
-    if message[-1].isnumeric():
-        requesting = requests.get(
-            JSON_API_URL + message + JSON_API_URL_2PART + bible_version
-        )
-        try:
-            text = requesting.text[1:-2]
-            jsontxt = json.loads(text)
+        if not passage[-1].isnumeric():
+            return ["Error - Verify the chapter of the passage"]
 
-            try:
-                verses = list(jsontxt["book"][0]["chapter"].keys())
-                full_verses = [
-                    str(each_verse)
-                    + " "
-                    + jsontxt["book"][0]["chapter"][each_verse]["verse"]
-                    for each_verse in verses
-                ]
+        # v2 API format: https://query.getbible.net/v2/{version}/{book} {chapter}:{verse}
+        url = f"{JSON_API_URL}{bible_version}/{passage.replace(' ', '%20')}"
+        response = requests.get(url, timeout=10)
+        
+        if response.status_code != 200:
+            return ["Error - Passage not found"]
+        
+        data = response.json()
+        
+        if not data:
+            return ["Error - Passage not found"]
+        
+        # v2 API returns dict with key like "akjv_43_3" 
+        first_key = list(data.keys())[0]
+        chapter_data = data[first_key]
+        verses = chapter_data.get('verses', [])
+        
+        if not verses:
+            return ["Error - No verses found"]
+        
+        # Format verses as "verse_number verse_text"
+        full_verses = [
+            f"{v['verse']} {v['text'].strip()}"
+            for v in verses
+        ]
+        
+        return ["".join(full_verses)]
+        
+    except Exception as e:
+        return [f"Error: {str(e)}"]
 
-            except Exception:
-                verses = list(jsontxt["chapter"].keys())
-                full_verses = [
-                    f"{str(each_verse)} "
-                    + jsontxt["chapter"][each_verse]["verse"]
-                    for each_verse in verses
-                ]
 
-            if text == "U":
-                full_verses = ["Error - Passage not found"]
-        except Exception:
-            full_verses = ["Error"]
-    else:
-        full_verses = ["Error - Verify the chapter of the passage"]
-
-    return ["".join(full_verses)]
-
-
-def get_next_chapter(present_chapter: str, bible_version: str = "akjv"):
+def get_next_chapter(present_chapter: str, bible_version: str = "akjv") -> str:
     """Returns the next chapter in a given book and chapter
 
     Args:
@@ -110,27 +120,31 @@ def get_next_chapter(present_chapter: str, bible_version: str = "akjv"):
         > John 2
 
     """
-    book = validations.verify_book(present_chapter)
-    chapter = present_chapter.split(" ")[-1].replace(".", "")
-    present_chapter = " ".join([book, chapter])
-
     try:
+        book = validations.verify_book(present_chapter)
+        chapter = present_chapter.split(" ")[-1].replace(".", "")
+        present_chapter = " ".join([book, chapter])
+
+        # Try next chapter
         next_chapter = " ".join([book, str(int(chapter) + 1)])
-        requesting = requests.get(
-            JSON_API_URL + next_chapter + JSON_API_URL_2PART + bible_version
-        )
-
-        text = requesting.text[1:-2]
-
-        if text == "U":
-            number_book = Dict_books[book]
-            new_book = Books[number_book + 1 - 1]
+        url = f"{JSON_API_URL}{bible_version}/{next_chapter.replace(' ', '%20')}"
+        response = requests.get(url, timeout=10)
+        
+        # If chapter exists, return it
+        if response.status_code == 200:
+            data = response.json()
+            if data:  # Chapter exists
+                return next_chapter
+        
+        # Chapter doesn't exist, move to next book
+        number_book = Dict_books.get(book, 0)
+        if number_book < len(Books):
+            new_book = Books[number_book]  # Next book (already +1 due to 1-indexing)
             new_chapter = 1
-            next_chapter = " ".join([new_book, str(new_chapter)])
-
+            return " ".join([new_book, str(new_chapter)])
+        else:
+            # Reached end, start over
+            return "Genesis 1"
+            
     except Exception:
-        number_book = 0
-        new_book = Books[number_book + 1 - 1]
-        new_chapter = 1
-        next_chapter = " ".join([new_book, str(new_chapter)])
-    return next_chapter
+        return "Genesis 1"

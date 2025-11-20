@@ -1,7 +1,7 @@
 """Languages support module
 """
 from difflib import SequenceMatcher
-from googletrans import Translator
+from deep_translator import GoogleTranslator
 import logging as log
 import json
 import numpy as np
@@ -10,8 +10,6 @@ import requests
 
 from utils import bible as Bible
 from utils import constants
-
-translator = Translator()
 
 # Available Languages and Versions in the API
 dict_api_version = constants.dict_api_version
@@ -67,7 +65,7 @@ def verify_book(book: str, books: list = Books):
     return books[np.argmax(similarity_vec)]
 
 
-def verify_book_chapter(book: str, chapter: str, bible_version: str = "akjv"):
+def verify_book_chapter(book: str, chapter: str, bible_version: str = "akjv") -> bool:
     """
     Verify the if the given chapter of a given book exists.
 
@@ -81,16 +79,16 @@ def verify_book_chapter(book: str, chapter: str, bible_version: str = "akjv"):
     """
 
     try:
-        requesting = requests.get(
-            (
-                (((JSON_API_URL + book) + chapter) + JSON_API_URL_2PART)
-                + bible_version
-            )
-        )
-
-        text = requesting.text[1:-2]
-        json.loads(text)  # Only to check if is something there
-        return True
+        # v2 API format
+        url = f"{JSON_API_URL}{bible_version}/{book}%20{chapter}"
+        response = requests.get(url, timeout=10)
+        
+        if response.status_code != 200:
+            return False
+        
+        data = response.json()
+        return bool(data)  # True if data exists
+        
     except Exception as exception:
         print(exception)
         return False
@@ -117,7 +115,11 @@ def verify_language(
         A string with the suggested language
     """
     languages = lang_transl + lang_ver_transl
-    language_input = translator.translate(language_input, dest="english").text
+    try:
+        language_input = GoogleTranslator(source='auto', target='en').translate(language_input)
+    except Exception as e:
+        log.warning(f"Translation error in verify_language: {e}")
+        language_input = language_input.lower()  # Fallback to original
     similarity_vec = [similar(language_input, each) for each in languages]
     return languages[np.argmax(similarity_vec)]
 
@@ -164,9 +166,18 @@ def translate_message(
         if src == "English" and language == "English":
             return message
         else:
-            return translator.translate(
-                message, dest=language, src=src
-            ).text.replace("/ ", "/")
+            # deep-translator uses language codes (en, es, fr, etc.)
+            # Convert full language names to codes
+            lang_map = {
+                'English': 'en', 'Spanish': 'es', 'French': 'fr', 
+                'German': 'de', 'Portuguese': 'pt', 'Italian': 'it',
+                'Russian': 'ru', 'Chinese': 'zh-CN', 'Japanese': 'ja',
+                'Korean': 'ko', 'Arabic': 'ar', 'Hindi': 'hi'
+            }
+            target = lang_map.get(language, language.lower()[:2])
+            source = 'auto' if src == 'auto' else lang_map.get(src, src.lower()[:2])
+            
+            return GoogleTranslator(source=source, target=target).translate(message).replace("/ ", "/")
     except (Exception) as exception:
         log.critical(f"In send translated message - Exception: {exception}")
         print("Connection Error")

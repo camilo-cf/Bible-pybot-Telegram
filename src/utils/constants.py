@@ -2,6 +2,10 @@
     Constants file for the project.
 """
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 BOOKS = [
     "Genesis",
@@ -74,8 +78,9 @@ BOOKS = [
 
 DICT_BOOKS = dict(zip(BOOKS, range(1, len(BOOKS) + 1)))
 
-JSON_API_URL = "https://getbible.net/json?passage="
-JSON_API_URL_2PART = "&version="
+# getBible API v2 (old v1 is deprecated)
+JSON_API_URL = "https://query.getbible.net/v2/"
+JSON_API_URL_2PART = ""  # No longer needed in v2
 
 # Telegram TOKEN
 TOKEN = os.getenv("BOT_TOKEN")

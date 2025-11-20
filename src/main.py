@@ -2,6 +2,9 @@
     Main code for the Bible-bot with Telegram
 """
 import logging as log
+import logging.handlers
+import signal
+import sys
 from time import sleep
 from typing import Any
 
@@ -11,8 +14,49 @@ import telebot.types as types
 from utils import constants
 from telegram_pages import pages
 
+# Configure logging with rotation to prevent SD card fill-up
+log_formatter = log.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+
+# File handler with rotation (max 5MB per file, keep 3 backups)
+file_handler = logging.handlers.RotatingFileHandler(
+    'bible_bot.log',
+    maxBytes=5*1024*1024,  # 5MB
+    backupCount=3
+)
+file_handler.setFormatter(log_formatter)
+file_handler.setLevel(log.INFO)
+
+# Console handler
+console_handler = log.StreamHandler(sys.stdout)
+console_handler.setFormatter(log_formatter)
+console_handler.setLevel(log.INFO)
+
+# Configure root logger
+log.basicConfig(
+    level=log.INFO,
+    handlers=[file_handler, console_handler]
+)
+
 bot = telebot.TeleBot(constants.TOKEN)
 tg_pages = pages.TelegramPages()
+
+# Graceful shutdown handler
+shutdown_requested = False
+
+def signal_handler(signum, frame):
+    """Handle shutdown signals gracefully"""
+    global shutdown_requested
+    log.info(f"Received signal {signum}, initiating graceful shutdown...")
+    shutdown_requested = True
+    try:
+        bot.stop_polling()
+    except Exception as e:
+        log.error(f"Error during shutdown: {e}")
+
+signal.signal(signal.SIGTERM, signal_handler)
+signal.signal(signal.SIGINT, signal_handler)
 
 ########################################################################
 ################          KEYBOARD FUNCTIONS         ###################
@@ -212,11 +256,31 @@ def command_default(chat_message):
 ################            MAIN FUNCTION             ##################
 ########################################################################
 if __name__ == "__main__":
-    while True:
+    log.info("Bible Telegram Bot starting...")
+    log.info(f"Bot token configured: {constants.TOKEN is not None}")
+    
+    retry_count = 0
+    max_retries = 5
+    
+    while not shutdown_requested:
         try:
-            log.info("Starting bot")
+            log.info(f"Starting bot polling (attempt {retry_count + 1})")
             bot.polling(none_stop=True, timeout=30)
+            retry_count = 0  # Reset on successful run
+        except KeyboardInterrupt:
+            log.info("Bot stopped by user")
+            break
         except Exception as err:
-            log.error("Bot polling error: {0}".format(err.args))
+            retry_count += 1
+            log.error(f"Bot polling error (attempt {retry_count}/{max_retries}): {err}")
             bot.stop_polling()
-            sleep(60)
+            
+            if retry_count >= max_retries:
+                log.critical(f"Max retries ({max_retries}) reached. Exiting.")
+                sys.exit(1)
+            
+            sleep_time = min(60 * retry_count, 300)  # Max 5 minutes
+            log.info(f"Retrying in {sleep_time} seconds...")
+            sleep(sleep_time)
+    
+    log.info("Bible Telegram Bot stopped gracefully")

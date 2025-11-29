@@ -16,7 +16,7 @@ pyTelegramBotAPI==4.29.1
 python-apt==2.2.1
 python-dotenv==1.0.1
 python-prctl==1.7
-requests==2.32.3
+requests==2.32.4
 RPi.GPIO==0.7.0
 setuptools==52.0.0
 simplejpeg==1.6.4

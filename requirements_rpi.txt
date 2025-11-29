@@ -26,4 +26,4 @@ ssh-import-id==5.10
 toml==0.10.1
 urllib3==2.2.3
 v4l2-python3==0.3.2
-wheel==0.34.2
+wheel==0.38.1
